@@ -1,4 +1,4 @@
-import { IGameState, GameState } from './GameState.js';
+import { IGameState, Tile2DGameState } from './GameState.js';
 import { Vector2D } from './Math.js';
 
 
@@ -6,7 +6,7 @@ interface IRenderer<T extends IGameState> {
     render(state: T): void;
 }
 
-class Renderer implements IRenderer<GameState> {
+class Tile2DRenderer implements IRenderer<Tile2DGameState> {
     private buffer: CanvasRenderingContext2D;
     private tiles: Record<number, IRenderable>
 
@@ -22,11 +22,11 @@ class Renderer implements IRenderer<GameState> {
         this.context = context;
         
         this.tiles = Object.keys(tiles)
-            .map(k => [parseInt(k), new RectangleRenderable(
+            .map(k => [parseInt(k), new Tile2DRenderable(
                 tiles[k]['name'], tiles[k]['color'])]
             )
             .reduce((z, x) => {
-                z[(<[number, RectangleRenderable]> x)[0]] = x[1]
+                z[(<[number, Tile2DRenderable]> x)[0]] = x[1]
 
                 return z;
             }, {});
@@ -34,13 +34,13 @@ class Renderer implements IRenderer<GameState> {
         this.cameraViewFieldLength = cameraViewFieldLength;
     }
 
-    render(state: GameState): void {
+    render(state: Tile2DGameState): void {
         this.initBuffer(state);
         this.renderMap(state);
         this.drawCanvas();
     }
 
-    private initBuffer(state: GameState) {
+    private initBuffer(state: Tile2DGameState) {
         this.buffer.canvas.height = this.tileSize * state.heightInTiles;
         this.buffer.canvas.width = this.tileSize * state.widthInTiles;
 
@@ -48,11 +48,9 @@ class Renderer implements IRenderer<GameState> {
             0, 0, this.buffer.canvas.width, this.buffer.canvas.height);
     }
 
-    private renderMap(state: GameState): void {
+    private renderMap(state: Tile2DGameState): void {
         let [xLimitLeft, xLimitRight] = this.getCameraFieldOfView(
             state.cameraPosition, state.widthInTiles);
-
-        console.log(`X-bounds: ${[xLimitLeft, xLimitRight]}`);
 
         for (let i = 0; i < state.map.length; i++) {
             let [xPixelInWorld, yPixelInWorld] = (
@@ -139,7 +137,7 @@ interface IRenderable {
 }
 
 
-class RectangleRenderable implements IRenderable {
+class Tile2DRenderable implements IRenderable {
     constructor(
             private name: string,
             private color: string) {
@@ -155,31 +153,7 @@ class RectangleRenderable implements IRenderable {
 }
 
 
-class SpriteRenderable implements IRenderable {
-    constructor(
-            private image: HTMLImageElement,
-            private x: number,
-            private y: number,
-            private width: number,
-            private height: number) {
-        this.image = image;
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-    }
-
-    draw(canvas: CanvasRenderingContext2D, x: number, y: number,
-         width: number, height: number, xCutLeft: number, xCutRight: number) {
-        canvas.drawImage(
-            this.image,
-            this.x + xCutLeft, this.y, this.width - (xCutLeft + xCutRight), this.height,
-            x, y, width, height);
-    }
-}
-
-
 export {
     IRenderer,
-    Renderer
+    Tile2DRenderer
 }

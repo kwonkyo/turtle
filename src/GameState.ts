@@ -7,7 +7,7 @@ interface IGameState {
 }
 
 
-class GameState implements IGameState {
+class Tile2DGameState implements IGameState {
     constructor(
             public map: number[],
             public widthInTiles: number,
@@ -24,5 +24,5 @@ class GameState implements IGameState {
 
 export {
     IGameState,
-    GameState
+    Tile2DGameState as Tile2DGameState
 }
