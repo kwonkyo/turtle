@@ -1,5 +1,4 @@
 import { IGameState, Tile2DGameState } from './GameState.js';
-import { Vector2D } from './Math.js';
 
 
 interface IRenderer<T extends IGameState> {
@@ -8,7 +7,7 @@ interface IRenderer<T extends IGameState> {
 
 class Tile2DRenderer implements IRenderer<Tile2DGameState> {
     private buffer: CanvasRenderingContext2D;
-    private tiles: Record<number, IRenderable>
+    private tiles: Record<number, ITile2DRenderable>
 
     constructor(
         private context: CanvasRenderingContext2D,
@@ -22,11 +21,11 @@ class Tile2DRenderer implements IRenderer<Tile2DGameState> {
         this.context = context;
         
         this.tiles = Object.keys(tiles)
-            .map(k => [parseInt(k), new Tile2DRenderable(
+            .map(k => [parseInt(k), new Tile2DRectangle(
                 tiles[k]['name'], tiles[k]['color'])]
             )
             .reduce((z, x) => {
-                z[(<[number, Tile2DRenderable]> x)[0]] = x[1]
+                z[(<[number, Tile2DRectangle]> x)[0]] = x[1]
 
                 return z;
             }, {});
@@ -130,14 +129,14 @@ class Tile2DRenderer implements IRenderer<Tile2DGameState> {
 }
 
 
-interface IRenderable {
+interface ITile2DRenderable {
     draw(
         canvas: CanvasRenderingContext2D, x: number, y: number,
         width: number, height: number, xCutLeft: number, xCutRight: number);
 }
 
 
-class Tile2DRenderable implements IRenderable {
+class Tile2DRectangle implements ITile2DRenderable {
     constructor(
             private name: string,
             private color: string) {
