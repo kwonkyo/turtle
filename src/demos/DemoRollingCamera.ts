@@ -4,9 +4,31 @@ import { Tile2DGameState } from '../2d/Tile2DGameState.js';
 import { Tile2DRenderer } from '../2d/Tile2DRenderer.js';
 import { Vector2D } from '../2d/Vector2D.js';
 import { ISimulator } from '../Simulator.js';
-import {
-    TILES, TILE_SIZE, MAP_WIDTH_IN_TILES,
-    CAMERA_VIEWFIELD_LENGTH, MAP_HEIGHT_IN_TILES, MAP} from './Constants.js';
+
+
+const TILES: Record<number, Record<string, string>>= {
+    0: {color: '#7FDBFF', name: 'AQUA_SKY'},
+    1: {color: '#62B6FF', name: 'BLUE_SKY'},
+    2: {color: '#3D9970', name: 'GROUND'}
+}
+
+const TILE_SIZE: number = 32;
+const MAP_WIDTH_IN_TILES: number = 32;
+const MAP_HEIGHT_IN_TILES: number = 10;
+const CAMERA_VIEWFIELD_LENGTH: number = 32 * 8;
+
+const MAP: number[] = [
+    0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+    2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+];
 
 
 class RollingCameraSimulator implements ISimulator<Tile2DGameState> {
@@ -41,6 +63,7 @@ class RollingCameraSimulator implements ISimulator<Tile2DGameState> {
     }
 }
 
+
 const canvas = document
     .querySelector('canvas')
     .getContext('2d');
@@ -56,5 +79,6 @@ const initialState = new Tile2DGameState(
     GameStatus.CONTINUE, initialCameraPosition);
 const engine = new Engine(
     1, simulator, renderer, initialState);
+
 
 window.requestAnimationFrame(() => engine.start());
