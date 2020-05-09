@@ -1,16 +1,18 @@
 import { IRenderer } from '../Renderer.js';
 import { GameState2D } from './GameState2D.js';
+import { Camera2D } from './Camera2D.js';
+import { Vector2D } from './Vector2D.js';
 
 
 class Renderer2D implements IRenderer<GameState2D> {
     private buffer: CanvasRenderingContext2D;
-    private renderables: Record<number, IRenderable2D>
+    private renderables: Record<number, IRenderable2D>;
 
     constructor(
         private context: CanvasRenderingContext2D,
-        tiles: Record<number, Record<string, string>>,
-        private tileSize: number,
-        private cameraViewFieldLength: number
+        private camera: Camera2D,
+        public tiles: Record<number, Record<string, string>>,
+        private unitLength: number
     ) {
         this.buffer = document
             .createElement('canvas')
@@ -19,109 +21,77 @@ class Renderer2D implements IRenderer<GameState2D> {
         
         this.renderables = Object.keys(tiles)
             .map(k => [parseInt(k), new Rectangle(
-                tiles[k]['name'], tiles[k]['color'])]
+                tiles[k]['name'], tiles[k]['color'],
+                unitLength, unitLength)]
             )
             .reduce((z, x) => {
                 z[(<[number, Rectangle]> x)[0]] = x[1]
 
                 return z;
             }, {});
-        this.tileSize = tileSize;
-        this.cameraViewFieldLength = cameraViewFieldLength;
+        this.unitLength = unitLength;
+        this.camera = camera;
     }
 
     render(state: GameState2D): void {
-        this.clearBuffer(state);
+        this.clearBuffer();
 
         this.drawMap(state);
         this.drawCanvas();
     }
 
-    private clearBuffer(state: GameState2D) {
-        this.buffer.canvas.height = this.tileSize * state.heightInTiles;
-        this.buffer.canvas.width = this.tileSize * state.widthInTiles;
+    private clearBuffer() {
+        this.buffer.canvas.width = this.camera.width;
+        this.buffer.canvas.height = this.camera.height;
 
         this.buffer.clearRect(
             0, 0, this.buffer.canvas.width, this.buffer.canvas.height);
     }
 
     private drawMap(state: GameState2D): void {
-        let [xLimitLeft, xLimitRight] = this.getCameraFieldOfView(
-            state.cameraPosition, state.widthInTiles);
-
         for (let i = 0; i < state.map.length; i++) {
-            let [xPixelInWorld, yPixelInWorld] = (
-                this.getPositionInWorld(i, state.widthInTiles)
-            );
+            const coordinates = this.getWorldCoordinates(
+                i, state.width);
+            const renderable = this.getRenderable(state.map, i);
 
-            if (!this.isTileInXBound(xPixelInWorld, xLimitLeft, xLimitRight)) {
-                continue;
+            const inCamera = renderable
+                .getCorners(coordinates.x, coordinates.y)
+                .some(v => this.camera.inField(v));
+
+            if (inCamera) {
+                let cameraFrameCoordinates = (
+                    this.camera.getCameraFrameCoordinates(coordinates)
+                );
+    
+                renderable.draw(
+                    this.buffer,
+                    cameraFrameCoordinates.x, cameraFrameCoordinates.y);
             }
-
-            let [xCutLeft, xCutRight] = this.getTileCutLines(
-                xPixelInWorld, xLimitLeft, xLimitRight);
-            
-            let [xPixelInCanvas, yPixelInCanvas] = (
-                this.offsetTileByCameraViewField(
-                    xPixelInWorld, yPixelInWorld, state.cameraPosition)
-            );
-
-            let tile = this.getTileAt(state.map, i);
-            tile.draw(
-                this.buffer, xPixelInCanvas, yPixelInCanvas,
-                this.tileSize, this.tileSize, xCutLeft, xCutRight);
         }
     }
 
-    private getCameraFieldOfView(cameraPosition, widthInTiles) {
-        let xLimitLeft = Math.min(
-            Math.max(
-                0, cameraPosition.x - this.cameraViewFieldLength),
-            widthInTiles * this.tileSize - this.cameraViewFieldLength);
-        let xLimitRight = Math.max(
-            this.cameraViewFieldLength, Math.min(
-                widthInTiles * this.tileSize,
-                cameraPosition.x + this.cameraViewFieldLength));
-
-        return [xLimitLeft, xLimitRight];
+    private getWorldCoordinates(mapIndex, mapWidth) {
+        return new Vector2D(
+            (mapIndex % mapWidth) * this.unitLength,
+            Math.floor(mapIndex / mapWidth) * this.unitLength);
     }
 
-    private getPositionInWorld(mapIndex, widthInTiles) {
-        let xPixelInWorld = (mapIndex % widthInTiles) * this.tileSize;
-        let yPixelInWorld = Math.floor(mapIndex / widthInTiles) * this.tileSize;
+    private getRenderable(map, mapIndex) {
+        let renderableIndex = map[mapIndex];
+        let renderable = this.renderables[renderableIndex];
 
-        return [xPixelInWorld, yPixelInWorld];
-    }
-
-    private isTileInXBound(xPixelInWorld, xLimitLeft, xLimitRight) {
-        return xPixelInWorld >= xLimitLeft && xPixelInWorld + this.tileSize <= xLimitRight;
-    }
-
-    private getTileCutLines(xPixelInWorld, xLimitLeft, xLimitRight) {
-        let xCutLeft = xPixelInWorld < xLimitLeft ? Math.abs(xPixelInWorld - xLimitLeft) : 0;
-        let xCutRight = xPixelInWorld > xLimitRight ? this.tileSize - Math.abs(xPixelInWorld - xLimitRight) : 0;
-
-        return [xCutLeft, xCutRight];
-    }
-
-    private getTileAt(map, mapIndex) {
-        let tileIndex = map[mapIndex];
-        let tile = this.renderables[tileIndex];
-
-        return tile;
-    }
-
-    private offsetTileByCameraViewField(x, y, cameraPosition) {
-        return [
-            x - (cameraPosition.x - this.cameraViewFieldLength), y];
+        return renderable;
     }
 
     private drawCanvas() {
+        this.context.canvas.width = this.camera.width;
+        this.context.canvas.height = this.camera.height;
+
         this.context.clearRect(
             0, 0, this.context.canvas.width, this.context.canvas.height);
         this.context.drawImage(
             this.buffer.canvas,
-            0, 0, this.buffer.canvas.width, this.buffer.canvas.height,
+            0, 0, this.camera.width, this.camera.height,
             0, 0, this.context.canvas.width, this.context.canvas.height);
     }
 }
@@ -129,23 +99,49 @@ class Renderer2D implements IRenderer<GameState2D> {
 
 interface IRenderable2D {
     draw(
-        canvas: CanvasRenderingContext2D, x: number, y: number,
-        width: number, height: number, xCutLeft: number, xCutRight: number);
+        canvas: CanvasRenderingContext2D, x: number, y: number);
+    
+    getCorners(x: number, y: number) : Vector2D[];
 }
 
 
 class Rectangle implements IRenderable2D {
     constructor(
             private name: string,
-            private color: string) {
+            private color: string,
+            private width: number,
+            private height: number) {
         this.name = name;
         this.color = color;
+        this.width = width;
+        this.height = height;
     }
 
-    draw(canvas: CanvasRenderingContext2D, x: number, y: number,
-         width: number, height: number, xCutLeft: number, xCutRight: number) {
+    draw(canvas: CanvasRenderingContext2D, x: number, y: number) {
         canvas.fillStyle = this.color;
-        canvas.fillRect(x + xCutLeft, y, width - (xCutLeft + xCutRight), height);
+
+        const [xClamped, widthClamped] = this.clamp1d(x, this.width);
+        const [yClamped, heightClamped] = this.clamp1d(y, this.height);
+
+        canvas.fillRect(xClamped, yClamped, widthClamped, heightClamped);
+    }
+
+    getCorners(x: number, y: number) : Vector2D[] {
+        return [
+            new Vector2D(x, y),
+            new Vector2D(x + this.width, y),
+            new Vector2D(x, y + this.height),
+            new Vector2D(x + this.width, y + this.height)
+        ];
+    }
+
+    private clamp1d(position: number, length: number) {
+        if (position < 0) {
+            length += position;
+            position = 0;
+        }
+
+        return [position, length];
     }
 }
 

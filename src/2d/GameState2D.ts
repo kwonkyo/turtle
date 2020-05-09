@@ -1,20 +1,17 @@
 import { IGameState } from '../GameState.js';
 import { GameStatus } from '../GameStatus.js';
-import { Vector2D } from './Vector2D.js';
 
 
 class GameState2D implements IGameState {
     constructor(
             public map: number[],
-            public widthInTiles: number,
-            public heightInTiles: number,
-            public status: GameStatus,
-            public cameraPosition: Vector2D) {
+            public width: number,
+            public height: number,
+            public status: GameStatus) {
         this.map = map;
-        this.widthInTiles = widthInTiles;
-        this.heightInTiles = heightInTiles;
+        this.width = width;
+        this.height = height;
         this.status = status;
-        this.cameraPosition = cameraPosition;
     }
 }
 
