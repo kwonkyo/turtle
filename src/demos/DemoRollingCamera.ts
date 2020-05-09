@@ -1,23 +1,23 @@
 import { GameStatus } from '../GameStatus.js';
 import { Engine } from '../Engine.js';
 import { GameState2D } from '../2d/GameState2D.js';
-import { Renderer2D } from '../2d/Renderer2D.js';
+import { Renderer2D, Rectangle } from '../2d/Renderer2D.js';
 import { Vector2D } from '../2d/Vector2D.js';
 import { ISimulator } from '../Simulator.js';
 import { Camera2D } from '../2d/Camera2D.js';
 
 
-const TILES: Record<number, Record<string, string>>= {
-    0: {color: '#7FDBFF', name: 'AQUA_SKY'},
-    1: {color: '#62B6FF', name: 'BLUE_SKY'},
-    2: {color: '#3D9970', name: 'GROUND'}
-}
-
-const TILE_SIZE: number = 32;
 const MAP_WIDTH: number = 32;
 const MAP_HEIGHT: number = 10;
-const CAMERA_WIDTH: number = TILE_SIZE * 10;
-const CAMERA_HEIGHT: number = TILE_SIZE * 10;
+const UNIT_LENGTH: number = 64;
+const CAMERA_WIDTH: number = UNIT_LENGTH * 10;
+const CAMERA_HEIGHT: number = UNIT_LENGTH * 10;
+
+const RENDERABLES: Record<number, Rectangle>= {
+    0: new Rectangle('AQUA_SKY', '#7FDBFF', UNIT_LENGTH, UNIT_LENGTH),
+    1: new Rectangle('BLUE_SKY', '#62B6FF', UNIT_LENGTH, UNIT_LENGTH),
+    2: new Rectangle('GROUND', '#3D9970', UNIT_LENGTH, UNIT_LENGTH)
+};
 
 const MAP: number[] = [
     0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -32,6 +32,9 @@ const MAP: number[] = [
     2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 ];
 
+const INITIAL_STATE: GameState2D = new GameState2D(
+    MAP, MAP_WIDTH, MAP_HEIGHT, GameStatus.CONTINUE);
+
 
 class RollingCameraSimulator implements ISimulator<GameState2D> {
     constructor(
@@ -41,7 +44,7 @@ class RollingCameraSimulator implements ISimulator<GameState2D> {
     }
 
     integrate(state: GameState2D, elapsedTime: number):GameState2D {
-        if (this.camera.position.x + camera.width > state.width * TILE_SIZE) {
+        if (this.camera.position.x + camera.width > state.width * UNIT_LENGTH) {
             return new GameState2D(
                 state.map, state.width, state.height, GameStatus.END);
         }
@@ -53,9 +56,7 @@ class RollingCameraSimulator implements ISimulator<GameState2D> {
         return state;
     }
 
-    interpolate(state: GameState2D, target: GameState2D, percent: number):GameState2D {
-        return state;
-    }
+    interpolate = (state: GameState2D, target: GameState2D, percent: number) : GameState2D => state;
 }
 
 
@@ -65,14 +66,11 @@ const canvas = document
 
 const camera = new Camera2D(
     new Vector2D(0, 0), CAMERA_WIDTH, CAMERA_HEIGHT);
-const simulator = new RollingCameraSimulator(camera, .1);
 const renderer = new Renderer2D(
-    canvas, camera, TILES, TILE_SIZE);
+    canvas, camera, RENDERABLES, UNIT_LENGTH);
 
-const initialState = new GameState2D(
-    MAP, MAP_WIDTH, MAP_HEIGHT, GameStatus.CONTINUE);
+const simulator = new RollingCameraSimulator(camera, .1);
 const engine = new Engine(
-    1, simulator, renderer, initialState);
-
+    1, simulator, renderer, INITIAL_STATE);
 
 window.requestAnimationFrame(() => engine.start());

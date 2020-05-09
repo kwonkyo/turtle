@@ -6,12 +6,11 @@ import { Vector2D } from './Vector2D.js';
 
 class Renderer2D implements IRenderer<GameState2D> {
     private buffer: CanvasRenderingContext2D;
-    private renderables: Record<number, IRenderable2D>;
 
     constructor(
         private context: CanvasRenderingContext2D,
         private camera: Camera2D,
-        public tiles: Record<number, Record<string, string>>,
+        private renderables: Record<number, IRenderable2D>,
         private unitLength: number
     ) {
         this.buffer = document
@@ -19,16 +18,7 @@ class Renderer2D implements IRenderer<GameState2D> {
             .getContext('2d');
         this.context = context;
         
-        this.renderables = Object.keys(tiles)
-            .map(k => [parseInt(k), new Rectangle(
-                tiles[k]['name'], tiles[k]['color'],
-                unitLength, unitLength)]
-            )
-            .reduce((z, x) => {
-                z[(<[number, Rectangle]> x)[0]] = x[1]
-
-                return z;
-            }, {});
+        this.renderables = renderables;
         this.unitLength = unitLength;
         this.camera = camera;
     }
@@ -146,5 +136,6 @@ class Rectangle implements IRenderable2D {
 }
 
 export {
-    Renderer2D
+    Renderer2D,
+    Rectangle
 }
