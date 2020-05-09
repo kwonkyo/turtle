@@ -1,0 +1,13 @@
+{
+  "name": "rabbit",
+  "version": "1.0.0",
+  "description": "A web browser game engine written in TypeScript & HTML5",
+  "main": "",
+  "scripts": {
+    "start": "tsc && serve",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kyo Jin Kwon",
+  "license": "MIT",
+  "dependencies": {}
+}
