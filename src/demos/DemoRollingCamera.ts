@@ -71,6 +71,6 @@ const renderer = new Renderer2D(
 
 const simulator = new RollingCameraSimulator(camera, .1);
 const engine = new Engine(
-    1, simulator, renderer, INITIAL_STATE);
+    60 / 1000, simulator, renderer, INITIAL_STATE);
 
 window.requestAnimationFrame(() => engine.start());
