@@ -3,7 +3,7 @@ import { GameStatus } from '../GameStatus.js';
 import { Vector2D } from './Vector2D.js';
 
 
-class Tile2DGameState implements IGameState {
+class GameState2D implements IGameState {
     constructor(
             public map: number[],
             public widthInTiles: number,
@@ -19,5 +19,5 @@ class Tile2DGameState implements IGameState {
 }
 
 export {
-    Tile2DGameState
+    GameState2D
 }

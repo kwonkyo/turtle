@@ -1,10 +1,10 @@
 import { IRenderer } from '../Renderer.js';
-import { Tile2DGameState } from './Tile2DGameState.js';
+import { GameState2D } from './GameState2D.js';
 
 
-class Tile2DRenderer implements IRenderer<Tile2DGameState> {
+class Renderer2D implements IRenderer<GameState2D> {
     private buffer: CanvasRenderingContext2D;
-    private renderables: Record<number, ITile2DRenderable>
+    private renderables: Record<number, IRenderable2D>
 
     constructor(
         private context: CanvasRenderingContext2D,
@@ -18,11 +18,11 @@ class Tile2DRenderer implements IRenderer<Tile2DGameState> {
         this.context = context;
         
         this.renderables = Object.keys(tiles)
-            .map(k => [parseInt(k), new Tile2DRectangle(
+            .map(k => [parseInt(k), new Rectangle(
                 tiles[k]['name'], tiles[k]['color'])]
             )
             .reduce((z, x) => {
-                z[(<[number, Tile2DRectangle]> x)[0]] = x[1]
+                z[(<[number, Rectangle]> x)[0]] = x[1]
 
                 return z;
             }, {});
@@ -30,14 +30,14 @@ class Tile2DRenderer implements IRenderer<Tile2DGameState> {
         this.cameraViewFieldLength = cameraViewFieldLength;
     }
 
-    render(state: Tile2DGameState): void {
+    render(state: GameState2D): void {
         this.clearBuffer(state);
 
         this.drawMap(state);
         this.drawCanvas();
     }
 
-    private clearBuffer(state: Tile2DGameState) {
+    private clearBuffer(state: GameState2D) {
         this.buffer.canvas.height = this.tileSize * state.heightInTiles;
         this.buffer.canvas.width = this.tileSize * state.widthInTiles;
 
@@ -45,7 +45,7 @@ class Tile2DRenderer implements IRenderer<Tile2DGameState> {
             0, 0, this.buffer.canvas.width, this.buffer.canvas.height);
     }
 
-    private drawMap(state: Tile2DGameState): void {
+    private drawMap(state: GameState2D): void {
         let [xLimitLeft, xLimitRight] = this.getCameraFieldOfView(
             state.cameraPosition, state.widthInTiles);
 
@@ -127,14 +127,14 @@ class Tile2DRenderer implements IRenderer<Tile2DGameState> {
 }
 
 
-interface ITile2DRenderable {
+interface IRenderable2D {
     draw(
         canvas: CanvasRenderingContext2D, x: number, y: number,
         width: number, height: number, xCutLeft: number, xCutRight: number);
 }
 
 
-class Tile2DRectangle implements ITile2DRenderable {
+class Rectangle implements IRenderable2D {
     constructor(
             private name: string,
             private color: string) {
@@ -150,5 +150,5 @@ class Tile2DRectangle implements ITile2DRenderable {
 }
 
 export {
-    Tile2DRenderer
+    Renderer2D
 }

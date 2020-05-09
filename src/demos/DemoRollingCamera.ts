@@ -1,7 +1,7 @@
 import { GameStatus } from '../GameStatus.js';
 import { Engine } from '../Engine.js';
-import { Tile2DGameState } from '../2d/Tile2DGameState.js';
-import { Tile2DRenderer } from '../2d/Tile2DRenderer.js';
+import { GameState2D } from '../2d/GameState2D.js';
+import { Renderer2D } from '../2d/Renderer2D.js';
 import { Vector2D } from '../2d/Vector2D.js';
 import { ISimulator } from '../Simulator.js';
 
@@ -31,15 +31,15 @@ const MAP: number[] = [
 ];
 
 
-class RollingCameraSimulator implements ISimulator<Tile2DGameState> {
+class RollingCameraSimulator implements ISimulator<GameState2D> {
     constructor(private dxdt: number) {
         this.dxdt = dxdt;
     }
 
-    integrate(state:Tile2DGameState, elapsedTime: number):Tile2DGameState {
+    integrate(state:GameState2D, elapsedTime: number):GameState2D {
         if (state.cameraPosition.x + CAMERA_VIEWFIELD_LENGTH
                 > state.widthInTiles * TILE_SIZE) {
-            return new Tile2DGameState(
+            return new GameState2D(
                 state.map, state.widthInTiles, state.heightInTiles,
                 GameStatus.END, state.cameraPosition);
         }
@@ -47,17 +47,17 @@ class RollingCameraSimulator implements ISimulator<Tile2DGameState> {
         let cameraPosition = state.cameraPosition.add(
             new Vector2D(this.dxdt * elapsedTime, 0));
 
-        return new Tile2DGameState(
+        return new GameState2D(
             state.map, state.widthInTiles, state.heightInTiles,
             state.status, cameraPosition);
     }
 
-    interpolate(state:Tile2DGameState, target:Tile2DGameState, percent: number):Tile2DGameState {
+    interpolate(state:GameState2D, target:GameState2D, percent: number):GameState2D {
         let cameraPosition = state.cameraPosition.interpolate(
             target.cameraPosition, percent);
         console.log(`Camera Position: ${[cameraPosition.x, cameraPosition.y]}`);
         
-        return new Tile2DGameState(
+        return new GameState2D(
             state.map, state.widthInTiles, state.heightInTiles,
             target.status, cameraPosition);
     }
@@ -69,12 +69,12 @@ const canvas = document
     .getContext('2d');
 
 const simulator = new RollingCameraSimulator(.1);
-const renderer = new Tile2DRenderer(
+const renderer = new Renderer2D(
     canvas, TILES, TILE_SIZE, CAMERA_VIEWFIELD_LENGTH);
 
 const initialCameraPosition = new Vector2D(
     CAMERA_VIEWFIELD_LENGTH, (MAP_HEIGHT_IN_TILES * TILE_SIZE) / 2);
-const initialState = new Tile2DGameState(
+const initialState = new GameState2D(
     MAP, MAP_WIDTH_IN_TILES, MAP_HEIGHT_IN_TILES,
     GameStatus.CONTINUE, initialCameraPosition);
 const engine = new Engine(
