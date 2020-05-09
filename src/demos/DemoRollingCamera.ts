@@ -1,9 +1,9 @@
-import {Tile2DGameState } from '../GameState.js';
-import { Tile2DRenderer } from '../Renderer.js';
 import { GameStatus } from '../GameStatus.js';
 import { Engine } from '../Engine.js';
-import { Vector2D } from '../Math.js';
-import { ISimulator, linearInterpolate } from '../Simulator.js';
+import { Tile2DGameState } from '../2d/Tile2DGameState.js';
+import { Tile2DRenderer } from '../2d/Tile2DRenderer.js';
+import { Vector2D } from '../2d/Vector2D.js';
+import { ISimulator } from '../Simulator.js';
 import {
     TILES, TILE_SIZE, MAP_WIDTH_IN_TILES,
     CAMERA_VIEWFIELD_LENGTH, MAP_HEIGHT_IN_TILES, MAP} from './Constants.js';
@@ -31,12 +31,8 @@ class RollingCameraSimulator implements ISimulator<Tile2DGameState> {
     }
 
     interpolate(state:Tile2DGameState, target:Tile2DGameState, percent: number):Tile2DGameState {
-        let cameraPosition = new Vector2D(
-            linearInterpolate(
-                state.cameraPosition.x, target.cameraPosition.x, percent),
-            linearInterpolate(
-                state.cameraPosition.y, target.cameraPosition.y, percent)
-        );
+        let cameraPosition = state.cameraPosition.interpolate(
+            target.cameraPosition, percent);
         console.log(`Camera Position: ${[cameraPosition.x, cameraPosition.y]}`);
         
         return new Tile2DGameState(

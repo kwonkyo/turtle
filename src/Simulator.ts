@@ -6,12 +6,6 @@ interface ISimulator<T extends IGameState> {
     interpolate(state: T, target: T, percent: number) : T;
 }
 
-
-function linearInterpolate(start: number, end: number, percent: number) {
-    return start * (1 - percent) + end * percent
-}
-
 export {
-    ISimulator,
-    linearInterpolate
+    ISimulator
 }

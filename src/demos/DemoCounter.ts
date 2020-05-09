@@ -1,7 +1,8 @@
 import { Engine } from '../Engine.js';
 import { IGameState } from '../GameState.js';
 import { GameStatus } from '../GameStatus.js';
-import { ISimulator, linearInterpolate } from '../Simulator.js';
+import { ISimulator } from '../Simulator.js';
+import { linearInterpolate } from '../Math.js';
 import { IRenderer } from '../Renderer.js';
 
 
