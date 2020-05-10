@@ -4,13 +4,11 @@ import { ISimulator } from './Simulator.js';
 import { IRenderer } from './Renderer.js';
 
 
-interface IEngine {
-    status: GameStatus;
-
-    start();
+interface IGameLoop {
+    run() : void;
 }
 
-class Engine<T extends IGameState> {
+class GameLoop<T extends IGameState> implements IGameLoop {
     private framePeriod: number;
     private state: T;
     private targetState: T;
@@ -32,7 +30,7 @@ class Engine<T extends IGameState> {
         this.maxAccumulatedFrames = maxAccumulatedFrames;
     }
 
-    start() {
+    run() : void {
         this.state = this.initialState;
         this.targetState = this.state;
         this.renderState = this.state;
@@ -41,10 +39,10 @@ class Engine<T extends IGameState> {
         this.elapsedTime = 0;  // Elapsed time since last loop iteration
         this.accumulatedTime = 0;  // Elapsed time since last frame
 
-        window.requestAnimationFrame(() => this.runLoop());
+        window.requestAnimationFrame(() => this.runSingleLoop());
     }
 
-    runLoop() {
+    private runSingleLoop() : void {
         if (this.state.status === GameStatus.END) {
             return;
         }
@@ -71,12 +69,12 @@ class Engine<T extends IGameState> {
 
         this.renderer.render(this.renderState);
         
-        window.requestAnimationFrame(() => this.runLoop());
+        window.requestAnimationFrame(() => this.runSingleLoop());
     }
 }
 
 
 export {
-    IEngine,
-    Engine
+    IGameLoop,
+    GameLoop
 }

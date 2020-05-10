@@ -1,5 +1,5 @@
 import { GameStatus } from '../GameStatus.js';
-import { Engine } from '../Engine.js';
+import { GameLoop } from '../GameLoop.js';
 import { GameState2D } from '../2d/GameState2D.js';
 import { Renderer2D } from '../2d/Renderer2D.js';
 import { Vector2D } from '../2d/Vector2D.js';
@@ -71,7 +71,8 @@ const renderer = new Renderer2D(
     canvas, camera, RENDERABLES, UNIT_LENGTH);
 
 const simulator = new RollingCameraSimulator(camera, .1);
-const engine = new Engine(
+const gameLoop = new GameLoop(
     60 / 1000, simulator, renderer, INITIAL_STATE);
 
-window.requestAnimationFrame(() => engine.start());
+
+window.requestAnimationFrame(() => gameLoop.run());

@@ -4,7 +4,7 @@ class IGameStatus {
 
 class GameStatus implements IGameStatus {
     constructor(public status: string) {
-        this.status = status
+        this.status = status;
     }
 
     static CONTINUE = new GameStatus('continue');

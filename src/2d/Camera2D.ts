@@ -9,9 +9,9 @@ interface ICamera2D {
     width: number;
     height: number;
 
-    setPosition(position: Vector2D);
-    setWidth(width: number);
-    setHeight(height: number);
+    setPosition(position: Vector2D) : void;
+    setWidth(width: number) : void;
+    setHeight(height: number) : void;
     inField(point: Vector2D) : boolean;
     getCameraFrameCoordinates(point: Vector2D) : Vector2D;
 }
@@ -27,15 +27,15 @@ class Camera2D implements ICamera2D {
         this.height = height;
     }
 
-    setPosition(position: Vector2D) {
+    setPosition(position: Vector2D) : void {
         this.position = position;
     }
 
-    setWidth(width: number) {
+    setWidth(width: number) : void {
         this.width = width;
     }
 
-    setHeight(height: number) {
+    setHeight(height: number) : void {
         this.height = height;
     }
 
@@ -66,7 +66,7 @@ class Camera2DPosition implements IControllable<KeyPressControlState> {
         this.unitLength = unitLength;
     }
 
-    respond(controlState: KeyPressControlState): void {
+    obey(controlState: KeyPressControlState) : void {
         if (!controlState.pressed) {
             return;
         }

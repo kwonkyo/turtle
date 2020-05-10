@@ -3,8 +3,8 @@ import { Vector2D } from './Vector2D.js';
 
 
 interface IRenderable2D {
-    inCamera(camera: ICamera2D, position: Vector2D);
-    draw(canvas: CanvasRenderingContext2D, position: Vector2D);
+    inCamera(camera: ICamera2D, position: Vector2D) : boolean;
+    draw(canvas: CanvasRenderingContext2D, position: Vector2D) : void;
 }
 
 
@@ -20,13 +20,13 @@ class Rectangle implements IRenderable2D {
         this.height = height;
     }
 
-    inCamera(camera: ICamera2D, position: Vector2D) {
+    inCamera(camera: ICamera2D, position: Vector2D) : boolean {
         return this
             .getCorners(position.x, position.y)
             .some(v => camera.inField(v));
     }
 
-    draw(canvas: CanvasRenderingContext2D, position: Vector2D) {
+    draw(canvas: CanvasRenderingContext2D, position: Vector2D) : void {
         canvas.fillStyle = this.color;
 
         const [xClamped, widthClamped] = this.clamp1d(position.x, this.width);
@@ -44,7 +44,7 @@ class Rectangle implements IRenderable2D {
         ];
     }
 
-    private clamp1d(position: number, length: number) {
+    private clamp1d(position: number, length: number) : number[] {
         if (position < 0) {
             length += position;
             position = 0;

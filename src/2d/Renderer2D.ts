@@ -31,7 +31,7 @@ class Renderer2D implements IRenderer<GameState2D> {
         this.drawCanvas();
     }
 
-    private clearBuffer() {
+    private clearBuffer() : void {
         this.buffer.canvas.width = this.camera.width;
         this.buffer.canvas.height = this.camera.height;
 
@@ -39,7 +39,7 @@ class Renderer2D implements IRenderer<GameState2D> {
             0, 0, this.buffer.canvas.width, this.buffer.canvas.height);
     }
 
-    private drawMap(state: GameState2D): void {
+    private drawMap(state: GameState2D) : void {
         for (let i = 0; i < state.map.length; i++) {
             const coordinates = this.getWorldCoordinates(
                 i, state.width);
@@ -54,20 +54,20 @@ class Renderer2D implements IRenderer<GameState2D> {
         }
     }
 
-    private getWorldCoordinates(mapIndex, mapWidth) {
+    private getWorldCoordinates(mapIndex, mapWidth) : Vector2D {
         return new Vector2D(
             (mapIndex % mapWidth) * this.unitLength,
             Math.floor(mapIndex / mapWidth) * this.unitLength);
     }
 
-    private getRenderable(map, mapIndex) {
-        let renderableIndex = map[mapIndex];
-        let renderable = this.renderables[renderableIndex];
+    private getRenderable(map, mapIndex) : IRenderable2D {
+        const renderableIndex = map[mapIndex];
+        const renderable = this.renderables[renderableIndex];
 
         return renderable;
     }
 
-    private drawCanvas() {
+    private drawCanvas() : void {
         this.context.canvas.width = this.camera.width;
         this.context.canvas.height = this.camera.height;
 

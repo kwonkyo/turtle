@@ -11,7 +11,7 @@ interface IControlHub<T> {
     controllables: IControllable<IControlState>[];
     controllers: IController<IControlEvent, IControlState>[];
 
-    receive(input: T);
+    receive(input: T) : void;
 }
 
 /**
@@ -26,31 +26,31 @@ class EventControlHub implements IControlHub<Event> {
         this.controllers = controllers;
     }
 
-    receive(e: Event) {
-        let controlEvent = this.createControlEvent(e);
+    receive(event: Event) : void {
+        let controlEvent = this.createControlEvent(event);
 
         this.updateControllers(controlEvent);
         this.updateControllables();
     }
 
-    createControlEvent(e: Event) {
-        if (e instanceof KeyboardEvent) {
-            return new KeyPressControlEvent(e);
+    private createControlEvent(event: Event) : IControlEvent {
+        if (event instanceof KeyboardEvent) {
+            return new KeyPressControlEvent(event);
         } else {
             throw TypeError(
-                `Unrecognized event while creating control event: ${e}`);
+                `Unrecognized event while creating control event: ${event}`);
         }
     }
 
-    updateControllers(controlEvent: IControlEvent) {
+    private updateControllers(controlEvent: IControlEvent) : void {
         this.controllers.forEach(controller => {
-            if (controller.canReceive(controlEvent)) {
-                controller.receive(controlEvent);
+            if (controller.receives(controlEvent)) {
+                controller.updateControlState(controlEvent);
             }
         });
     }
 
-    updateControllables() {
+    private updateControllables() : void {
         this.controllers.forEach(controller => {
             this.controllables.forEach(controllable => {
                 if (controller.canControl(controllable)) {

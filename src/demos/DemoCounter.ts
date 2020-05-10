@@ -1,4 +1,4 @@
-import { Engine } from '../Engine.js';
+import { GameLoop } from '../GameLoop.js';
 import { IGameState } from '../GameState.js';
 import { GameStatus } from '../GameStatus.js';
 import { ISimulator } from '../Simulator.js';
@@ -70,7 +70,7 @@ class DemoRenderer implements IRenderer<DemoGameState> {
 const FRAME_RATE = 30. / 1000;  // 30 FPS
 const MAX_ACCUMULATED_FRAMES = 5;
 
-let engine = new Engine(
+const gameLoop = new GameLoop(
     FRAME_RATE,
     new DemoSimulator(1 / 1000.),  // 1 FPS
     new DemoRenderer(),
@@ -78,4 +78,4 @@ let engine = new Engine(
     MAX_ACCUMULATED_FRAMES
 );
 
-window.requestAnimationFrame(() => engine.start());
+window.requestAnimationFrame(() => gameLoop.run());
