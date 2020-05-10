@@ -28,6 +28,7 @@ class EventControlHub implements IControlHub<Event> {
 
     receive(e: Event) {
         let controlEvent = this.createControlEvent(e);
+
         this.updateControllers(controlEvent);
         this.updateControllables();
     }

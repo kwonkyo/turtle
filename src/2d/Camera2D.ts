@@ -70,6 +70,7 @@ class Camera2DPosition implements IControllable<KeyPressControlState> {
         if (!controlState.pressed) {
             return;
         }
+
         if (controlState.keyCode === KEYCODE.LEFT_ARROW) {
             this.camera.position.x -= this.speed;
         } else if (controlState.keyCode === KEYCODE.UP_ARROW) {
@@ -82,7 +83,7 @@ class Camera2DPosition implements IControllable<KeyPressControlState> {
 
         this.camera.position.x = Math.min(
             Math.max(0, this.camera.position.x),
-            this.state.width * this.unitLength
+            this.state.width * this.unitLength - this.camera.width
         );
 
         this.camera.position.y = Math.min(
