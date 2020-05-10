@@ -1,10 +1,11 @@
 import { GameStatus } from '../GameStatus.js';
 import { Engine } from '../Engine.js';
 import { GameState2D } from '../2d/GameState2D.js';
-import { Renderer2D, Rectangle } from '../2d/Renderer2D.js';
+import { Renderer2D } from '../2d/Renderer2D.js';
 import { Vector2D } from '../2d/Vector2D.js';
 import { ISimulator } from '../Simulator.js';
 import { Camera2D } from '../2d/Camera2D.js';
+import { Rectangle } from '../2d/Renderable2D.js';
 
 
 const MAP_WIDTH: number = 32;

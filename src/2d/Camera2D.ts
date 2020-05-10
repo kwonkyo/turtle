@@ -95,6 +95,7 @@ class Camera2DPosition implements IControllable<KeyPressControlState> {
 
 
 export {
+    ICamera2D,
     Camera2D,
     Camera2DPosition
 }

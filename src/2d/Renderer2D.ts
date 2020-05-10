@@ -1,7 +1,8 @@
 import { IRenderer } from '../Renderer.js';
 import { GameState2D } from './GameState2D.js';
-import { Camera2D } from './Camera2D.js';
+import { ICamera2D } from './Camera2D.js';
 import { Vector2D } from './Vector2D.js';
+import { IRenderable2D } from './Renderable2D.js';
 
 
 class Renderer2D implements IRenderer<GameState2D> {
@@ -9,7 +10,7 @@ class Renderer2D implements IRenderer<GameState2D> {
 
     constructor(
         private context: CanvasRenderingContext2D,
-        private camera: Camera2D,
+        private camera: ICamera2D,
         private renderables: Record<number, IRenderable2D>,
         private unitLength: number
     ) {
@@ -44,18 +45,11 @@ class Renderer2D implements IRenderer<GameState2D> {
                 i, state.width);
             const renderable = this.getRenderable(state.map, i);
 
-            const inCamera = renderable
-                .getCorners(coordinates.x, coordinates.y)
-                .some(v => this.camera.inField(v));
-
-            if (inCamera) {
+            if (renderable.inCamera(this.camera, coordinates)) {
                 let cameraFrameCoordinates = (
-                    this.camera.getCameraFrameCoordinates(coordinates)
-                );
+                    this.camera.getCameraFrameCoordinates(coordinates));
     
-                renderable.draw(
-                    this.buffer,
-                    cameraFrameCoordinates.x, cameraFrameCoordinates.y);
+                renderable.draw(this.buffer, cameraFrameCoordinates);
             }
         }
     }
@@ -87,55 +81,6 @@ class Renderer2D implements IRenderer<GameState2D> {
 }
 
 
-interface IRenderable2D {
-    draw(
-        canvas: CanvasRenderingContext2D, x: number, y: number);
-    
-    getCorners(x: number, y: number) : Vector2D[];
-}
-
-
-class Rectangle implements IRenderable2D {
-    constructor(
-            private name: string,
-            private color: string,
-            private width: number,
-            private height: number) {
-        this.name = name;
-        this.color = color;
-        this.width = width;
-        this.height = height;
-    }
-
-    draw(canvas: CanvasRenderingContext2D, x: number, y: number) {
-        canvas.fillStyle = this.color;
-
-        const [xClamped, widthClamped] = this.clamp1d(x, this.width);
-        const [yClamped, heightClamped] = this.clamp1d(y, this.height);
-
-        canvas.fillRect(xClamped, yClamped, widthClamped, heightClamped);
-    }
-
-    getCorners(x: number, y: number) : Vector2D[] {
-        return [
-            new Vector2D(x, y),
-            new Vector2D(x + this.width, y),
-            new Vector2D(x, y + this.height),
-            new Vector2D(x + this.width, y + this.height)
-        ];
-    }
-
-    private clamp1d(position: number, length: number) {
-        if (position < 0) {
-            length += position;
-            position = 0;
-        }
-
-        return [position, length];
-    }
-}
-
 export {
-    Renderer2D,
-    Rectangle
+    Renderer2D
 }
