@@ -4,7 +4,9 @@ import { GameState2D } from '../2d/GameState2D.js';
 import { Renderer2D, Rectangle } from '../2d/Renderer2D.js';
 import { Vector2D } from '../2d/Vector2D.js';
 import { ISimulator } from '../Simulator.js';
-import { Camera2D } from '../2d/Camera2D.js';
+import { Camera2D, Camera2DTranslation } from '../2d/Camera2D.js';
+import { EventController } from '../Controller.js';
+import { KeyPressControls } from '../Controls.js';
 
 
 const MAP_WIDTH: number = 32;
@@ -12,6 +14,7 @@ const MAP_HEIGHT: number = 10;
 const UNIT_LENGTH: number = 64;
 const CAMERA_WIDTH: number = UNIT_LENGTH * 10;
 const CAMERA_HEIGHT: number = UNIT_LENGTH * 10;
+const CAMERA_SPEED: number = 5;
 
 const RENDERABLES: Record<number, Rectangle>= {
     0: new Rectangle('AQUA_SKY', '#7FDBFF', UNIT_LENGTH, UNIT_LENGTH),
@@ -36,26 +39,8 @@ const INITIAL_STATE: GameState2D = new GameState2D(
     MAP, MAP_WIDTH, MAP_HEIGHT, GameStatus.CONTINUE);
 
 
-class RollingCameraSimulator implements ISimulator<GameState2D> {
-    constructor(
-            private camera: Camera2D,
-            private dxdt: number) {
-        this.dxdt = dxdt;
-    }
-
-    integrate(state: GameState2D, elapsedTime: number) : GameState2D {
-        if (this.camera.position.x + camera.width > state.width * UNIT_LENGTH) {
-            return new GameState2D(
-                state.map, state.width, state.height, GameStatus.END);
-        }
-
-        this.camera.setPosition(
-            this.camera.position.add(
-                new Vector2D(this.dxdt * elapsedTime, 0)));
-
-        return state;
-    }
-
+class NoSimulator implements ISimulator<GameState2D> {
+    integrate = (state: GameState2D, elapsedTime: number) : GameState2D => state;
     interpolate = (state: GameState2D, target: GameState2D, percent: number) : GameState2D => state;
 }
 
@@ -66,11 +51,25 @@ const canvas = document
 
 const camera = new Camera2D(
     new Vector2D(0, 0), CAMERA_WIDTH, CAMERA_HEIGHT);
+const cameraTranslation = new Camera2DTranslation(
+    camera, CAMERA_SPEED, INITIAL_STATE, UNIT_LENGTH);
+
 const renderer = new Renderer2D(
     canvas, camera, RENDERABLES, UNIT_LENGTH);
 
-const simulator = new RollingCameraSimulator(camera, .1);
+const simulator = new NoSimulator();
 const engine = new Engine(
     60 / 1000, simulator, renderer, INITIAL_STATE);
 
+const controller = new EventController(
+    [cameraTranslation],
+    [
+        KeyPressControls.LEFT,
+        KeyPressControls.UP,
+        KeyPressControls.RIGHT,
+        KeyPressControls.DOWN
+    ]
+);
+window.addEventListener('keydown', e => controller.control(e));
+window.addEventListener('keyup', e => controller.control(e));
 window.requestAnimationFrame(() => engine.start());
