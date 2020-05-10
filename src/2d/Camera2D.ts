@@ -67,13 +67,13 @@ class Camera2DTranslation implements IControllable<KeyPressControlState> {
     }
 
     receive(controlState: KeyPressControlState): void {
-        if (controlState.keyCode === KEYCODE.LEFT) {
+        if (controlState.keyCode === KEYCODE.LEFT_ARROW) {
             this.camera.position.x -= this.speed;
-        } else if (controlState.keyCode === KEYCODE.UP) {
+        } else if (controlState.keyCode === KEYCODE.UP_ARROW) {
             this.camera.position.y -= this.speed;
-        } else if (controlState.keyCode === KEYCODE.RIGHT) {
+        } else if (controlState.keyCode === KEYCODE.RIGHT_ARROW) {
             this.camera.position.x += this.speed;
-        } else if (controlState.keyCode === KEYCODE.DOWN) {
+        } else if (controlState.keyCode === KEYCODE.DOWN_ARROW) {
             this.camera.position.y += this.speed;
         }
 

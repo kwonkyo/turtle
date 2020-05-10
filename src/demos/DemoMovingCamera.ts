@@ -5,8 +5,8 @@ import { Renderer2D, Rectangle } from '../2d/Renderer2D.js';
 import { Vector2D } from '../2d/Vector2D.js';
 import { ISimulator } from '../Simulator.js';
 import { Camera2D, Camera2DTranslation } from '../2d/Camera2D.js';
-import { EventController } from '../Controller.js';
-import { KeyPressControls } from '../Controls.js';
+import { EventControlHub } from '../ControlHub.js';
+import { KeyPressController } from '../Controls.js';
 
 
 const MAP_WIDTH: number = 32;
@@ -61,15 +61,15 @@ const simulator = new NoSimulator();
 const engine = new Engine(
     60 / 1000, simulator, renderer, INITIAL_STATE);
 
-const controller = new EventController(
+const controlHub = new EventControlHub(
     [cameraTranslation],
     [
-        KeyPressControls.LEFT,
-        KeyPressControls.UP,
-        KeyPressControls.RIGHT,
-        KeyPressControls.DOWN
+        KeyPressController.LEFT_ARROW,
+        KeyPressController.UP_ARROW,
+        KeyPressController.RIGHT_ARROW,
+        KeyPressController.DOWN_ARROW
     ]
 );
-window.addEventListener('keydown', e => controller.control(e));
-window.addEventListener('keyup', e => controller.control(e));
+window.addEventListener('keydown', e => controlHub.receive(e));
+window.addEventListener('keyup', e => controlHub.receive(e));
 window.requestAnimationFrame(() => engine.start());

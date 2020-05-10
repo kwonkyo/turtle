@@ -3,26 +3,27 @@ import { IControlEvent, KeyPressControlEvent } from "./ControlEvent.js";
 import { ControlType } from "./ControlType.js";
 
 /**
- * A control component that receives control events to produce control states.
- * It can only receive control events under the same control type as its control state.
+ * A controller that receives control events to produce control states.
+ * It can only receive control events of the same control type as the control state.
  */
-interface IControls<T extends IControlEvent, K extends IControlState> {
-    controlState: K;
+interface IController<T extends IControlEvent, K extends IControlState> {
+    state: K;
 
     canReceive(e: T) : boolean;
     receive(e: T) : void;
     getControlState() : K;
 }
 
-class Controls<T extends IControlEvent, K extends IControlState> implements IControls<T, K> {
-    controlState: K;
+class Controller<T extends IControlEvent, K extends IControlState>
+        implements IController<T, K> {
+    state: K;
 
-    constructor(controlState: K) {
-        this.controlState = controlState;
+    constructor(state: K) {
+        this.state = state;
     }
 
     canReceive(e: T): boolean {
-        return e.type == this.controlState.type;
+        return e.type == this.state.type;
     }
 
     receive(e: T): void {
@@ -30,15 +31,15 @@ class Controls<T extends IControlEvent, K extends IControlState> implements ICon
     }
 
     getControlState(): K {
-        return this.controlState;
+        return this.state;
     }
     
 }
 
 /**
- * A key-press control.
+ * A key-press controller.
  */
-class KeyPressControls extends Controls<KeyPressControlEvent, KeyPressControlState> {
+class KeyPressController extends Controller<KeyPressControlEvent, KeyPressControlState> {
     public type: ControlType = ControlType.KEYPRESS;
 
     constructor(keyCode) {
@@ -48,27 +49,27 @@ class KeyPressControls extends Controls<KeyPressControlEvent, KeyPressControlSta
     canReceive(e: KeyPressControlEvent) : boolean {
         return (
             super.canReceive(e) &&
-            e.payload.keyCode === this.controlState.keyCode);
+            e.payload.keyCode === this.state.keyCode);
     }
 
     receive(e: KeyPressControlEvent) : void {
-        this.controlState.pressed = e.payload.type == 'keydown';
+        this.state.pressed = e.payload.type == 'keydown';
 
-        if (!this.controlState.hit && e.payload.type == 'keydown') {
-            this.controlState.hit = true;
+        if (!this.state.hit && e.payload.type == 'keydown') {
+            this.state.hit = true;
         } else {
-            this.controlState.hit = false;
+            this.state.hit = false;
         }
     }
 
-    static LEFT = new KeyPressControls(KEYCODE.LEFT);
-    static UP = new KeyPressControls(KEYCODE.UP);
-    static RIGHT = new KeyPressControls(KEYCODE.RIGHT);
-    static DOWN = new KeyPressControls(KEYCODE.DOWN);
+    static LEFT_ARROW = new KeyPressController(KEYCODE.LEFT_ARROW);
+    static UP_ARROW = new KeyPressController(KEYCODE.UP_ARROW);
+    static RIGHT_ARROW = new KeyPressController(KEYCODE.RIGHT_ARROW);
+    static DOWN_ARROW = new KeyPressController(KEYCODE.DOWN_ARROW);
 }
 
 
 export {
-    IControls,
-    KeyPressControls
+    IController,
+    KeyPressController
 }

@@ -1,34 +1,46 @@
 import { IControllable } from "./Controllable.js";
 import { IControlState } from "./ControlState.js";
-import { IControls, KeyPressControls } from "./Controls.js";
+import { IController } from "./Controls.js";
 import { IControlEvent, KeyPressControlEvent } from "./ControlEvent.js";
 
 
 /**
- * Executes control flow on controllables.
+ * A control event hub
  */
-interface IController<T> {
+interface IControlHub<T> {
     controllables: IControllable<IControlState>[];
-    controls: IControls<IControlEvent, IControlState>[];
+    controls: IController<IControlEvent, IControlState>[];
 
-    control(input: T);
+    receive(input: T);
 }
 
 /**
- * JS event-based controller.
+ * JS event-based event hub
  */
 
-class EventController implements IController<Event> {
+class EventControlHub implements IControlHub<Event> {
     constructor(
             public controllables: IControllable<IControlState>[],
-            public controls: IControls<IControlEvent, IControlState>[]) {
+            public controls: IController<IControlEvent, IControlState>[]) {
         this.controllables = controllables;
         this.controls = controls;
     }
 
-    control(e: Event) {
-        let controlEvent = this.getControlEvent(e);
+    receive(e: Event) {
+        let controlEvent = this.createControlEvent(e);
+        this.passControlEvent(controlEvent);
+    }
 
+    createControlEvent(e: Event) {
+        if (e instanceof KeyboardEvent) {
+            return new KeyPressControlEvent(e);
+        } else {
+            throw TypeError(
+                `Unrecognized event while creating control event: ${e}`);
+        }
+    }
+
+    passControlEvent(controlEvent: IControlEvent) {
         this.controls.forEach(controls => {
             if (controls.canReceive(controlEvent)) {
                 controls.receive(controlEvent);
@@ -37,16 +49,7 @@ class EventController implements IController<Event> {
                     controls.getControlState()
                 );
             }
-        })
-    }
-
-    getControlEvent(e: Event) {
-        if (e instanceof KeyboardEvent) {
-            return new KeyPressControlEvent(e);
-        } else {
-            throw TypeError(
-                `Unrecognized control event: ${e}`);
-        }
+        });
     }
 
     passControlState(controlState: IControlState) {
@@ -59,6 +62,6 @@ class EventController implements IController<Event> {
 }
 
 export {
-    IController,
-    EventController
+    IControlHub,
+    EventControlHub
 }
