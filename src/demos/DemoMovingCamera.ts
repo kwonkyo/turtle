@@ -12,8 +12,8 @@ import { KeyPressControls } from '../Controls.js';
 const MAP_WIDTH: number = 32;
 const MAP_HEIGHT: number = 10;
 const UNIT_LENGTH: number = 64;
-const CAMERA_WIDTH: number = UNIT_LENGTH * 10;
-const CAMERA_HEIGHT: number = UNIT_LENGTH * 10;
+const CAMERA_WIDTH: number = UNIT_LENGTH * 8;
+const CAMERA_HEIGHT: number = UNIT_LENGTH * 8;
 const CAMERA_SPEED: number = 5;
 
 const RENDERABLES: Record<number, Rectangle>= {
