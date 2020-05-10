@@ -1,6 +1,6 @@
 import { IControllable } from "./Controllable.js";
 import { IControlState } from "./ControlState.js";
-import { IController } from "./Controls.js";
+import { IController } from "./Controller.js";
 import { IControlEvent, KeyPressControlEvent } from "./ControlEvent.js";
 
 
@@ -9,7 +9,7 @@ import { IControlEvent, KeyPressControlEvent } from "./ControlEvent.js";
  */
 interface IControlHub<T> {
     controllables: IControllable<IControlState>[];
-    controls: IController<IControlEvent, IControlState>[];
+    controllers: IController<IControlEvent, IControlState>[];
 
     receive(input: T);
 }
@@ -21,14 +21,15 @@ interface IControlHub<T> {
 class EventControlHub implements IControlHub<Event> {
     constructor(
             public controllables: IControllable<IControlState>[],
-            public controls: IController<IControlEvent, IControlState>[]) {
+            public controllers: IController<IControlEvent, IControlState>[]) {
         this.controllables = controllables;
-        this.controls = controls;
+        this.controllers = controllers;
     }
 
     receive(e: Event) {
         let controlEvent = this.createControlEvent(e);
-        this.passControlEvent(controlEvent);
+        this.updateControllers(controlEvent);
+        this.updateControllables();
     }
 
     createControlEvent(e: Event) {
@@ -40,23 +41,21 @@ class EventControlHub implements IControlHub<Event> {
         }
     }
 
-    passControlEvent(controlEvent: IControlEvent) {
-        this.controls.forEach(controls => {
-            if (controls.canReceive(controlEvent)) {
-                controls.receive(controlEvent);
-
-                this.passControlState(
-                    controls.getControlState()
-                );
+    updateControllers(controlEvent: IControlEvent) {
+        this.controllers.forEach(controller => {
+            if (controller.canReceive(controlEvent)) {
+                controller.receive(controlEvent);
             }
         });
     }
 
-    passControlState(controlState: IControlState) {
-        this.controllables.forEach(controllable => {
-            if (controllable.controlType === controlState.type) {
-                controllable.receive(controlState);
-            }
+    updateControllables() {
+        this.controllers.forEach(controller => {
+            this.controllables.forEach(controllable => {
+                if (controller.canControl(controllable)) {
+                    controller.control(controllable);
+                }
+            });
         });
     }
 }

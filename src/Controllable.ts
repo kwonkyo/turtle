@@ -2,12 +2,12 @@ import { IControlState } from "./ControlState.js";
 import { ControlType } from "./ControlType.js";
 
 /**
- * An controllable object that receives control states.
+ * An controllable object that responds to control states.
  */
 interface IControllable<T extends IControlState> {
-    controlType: ControlType;
+    type: ControlType;
 
-    receive(controlState: T) : void;
+    respond(controlState: T) : void;
 }
 
 

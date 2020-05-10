@@ -52,8 +52,8 @@ class Camera2D implements ICamera2D {
 }
 
 
-class Camera2DTranslation implements IControllable<KeyPressControlState> {
-    controlType: ControlType = ControlType.KEYPRESS;
+class Camera2DPosition implements IControllable<KeyPressControlState> {
+    type: ControlType = ControlType.KEYPRESS;
 
     constructor(
             private camera: Camera2D,
@@ -66,7 +66,10 @@ class Camera2DTranslation implements IControllable<KeyPressControlState> {
         this.unitLength = unitLength;
     }
 
-    receive(controlState: KeyPressControlState): void {
+    respond(controlState: KeyPressControlState): void {
+        if (!controlState.pressed) {
+            return;
+        }
         if (controlState.keyCode === KEYCODE.LEFT_ARROW) {
             this.camera.position.x -= this.speed;
         } else if (controlState.keyCode === KEYCODE.UP_ARROW) {
@@ -92,5 +95,5 @@ class Camera2DTranslation implements IControllable<KeyPressControlState> {
 
 export {
     Camera2D,
-    Camera2DTranslation
+    Camera2DPosition
 }
