@@ -2,7 +2,6 @@ import { Vector2D } from "./Vector2D";
 import { IControllable } from "../Controllable.js";
 import { KeyPressControlState, KEYCODE } from "../ControlState.js";
 import { ControlType } from "../ControlType.js";
-import { GameState2D } from "./GameState2D";
 
 interface ICamera2D {
     position: Vector2D;
@@ -58,12 +57,14 @@ class Camera2DPosition implements IControllable<KeyPressControlState> {
     constructor(
             private camera: Camera2D,
             private speed: number,
-            private state: GameState2D,
-            private unitLength: number) {
+            private unitLength: number,
+            private mapRows: number,
+            private mapColumns: number) {
         this.camera = camera;
         this.speed = speed;
-        this.state = state;
         this.unitLength = unitLength;
+        this.mapRows = mapRows;
+        this.mapColumns = mapColumns;
     }
 
     obey(controlState: KeyPressControlState) : void {
@@ -83,12 +84,12 @@ class Camera2DPosition implements IControllable<KeyPressControlState> {
 
         this.camera.position.x = Math.min(
             Math.max(0, this.camera.position.x),
-            this.state.width * this.unitLength - this.camera.width
+            this.mapColumns * this.unitLength - this.camera.width
         );
 
         this.camera.position.y = Math.min(
             Math.max(0, this.camera.position.y),
-            this.state.height * this.unitLength - this.camera.height
+            this.mapRows * this.unitLength - this.camera.height
         );
     }
 }

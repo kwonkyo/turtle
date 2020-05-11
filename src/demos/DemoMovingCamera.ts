@@ -7,17 +7,20 @@ import { ISimulator } from '../Simulator.js';
 import { Camera2D, Camera2DPosition } from '../2d/Camera2D.js';
 import { EventControlHub } from '../ControlHub.js';
 import { KeyPressController } from '../Controller.js';
-import { Rectangle } from '../2d/Renderable2D.js';
+import { Rectangle, IRenderable2D } from '../2d/Renderable2D.js';
+import { Map2D } from '../2d/Map2D.js';
 
 
-const MAP_WIDTH: number = 32;
-const MAP_HEIGHT: number = 10;
+const MAP_ROWS: number = 17;
+const MAP_COLUMNS: number = 32;
 const UNIT_LENGTH: number = 64;
-const CAMERA_WIDTH: number = UNIT_LENGTH * 8;
-const CAMERA_HEIGHT: number = UNIT_LENGTH * 8;
-const CAMERA_SPEED: number = 5;
+const CAMERA_WIDTH: number = UNIT_LENGTH * 10;
+const CAMERA_HEIGHT: number = UNIT_LENGTH * 10;
+const CAMERA_INITIAL_POSITION: Vector2D = new Vector2D(
+    0, UNIT_LENGTH * MAP_ROWS - CAMERA_HEIGHT);
+const CAMERA_SPEED: number = 8;
 
-const RENDERABLES: Record<number, Rectangle>= {
+const BRICKS: Record<number, IRenderable2D>= {
     0: new Rectangle('AQUA_SKY', '#7FDBFF', UNIT_LENGTH, UNIT_LENGTH),
     1: new Rectangle('BLUE_SKY', '#62B6FF', UNIT_LENGTH, UNIT_LENGTH),
     2: new Rectangle('GROUND', '#3D9970', UNIT_LENGTH, UNIT_LENGTH)
@@ -31,13 +34,19 @@ const MAP: number[] = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
     2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
     2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 ];
 
-const INITIAL_STATE: GameState2D = new GameState2D(
-    MAP, MAP_WIDTH, MAP_HEIGHT, GameStatus.CONTINUE);
+const INITIAL_STATE: GameState2D = new GameState2D(GameStatus.CONTINUE);
 
 
 class NoSimulator implements ISimulator<GameState2D> {
@@ -51,12 +60,12 @@ const canvas = document
     .getContext('2d');
 
 const camera = new Camera2D(
-    new Vector2D(0, 0), CAMERA_WIDTH, CAMERA_HEIGHT);
+    CAMERA_INITIAL_POSITION, CAMERA_WIDTH, CAMERA_HEIGHT);
 const cameraPosition = new Camera2DPosition(
-    camera, CAMERA_SPEED, INITIAL_STATE, UNIT_LENGTH);
-
-const renderer = new Renderer2D(
-    canvas, camera, RENDERABLES, UNIT_LENGTH);
+    camera, CAMERA_SPEED, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS);
+const map = new Map2D(
+    MAP, BRICKS, MAP_COLUMNS, UNIT_LENGTH, camera);
+const renderer = new Renderer2D(canvas, camera, map);
 
 const simulator = new NoSimulator();
 const gameLoop = new GameLoop(

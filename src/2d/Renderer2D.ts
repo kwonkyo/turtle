@@ -11,23 +11,21 @@ class Renderer2D implements IRenderer<GameState2D> {
     constructor(
         private context: CanvasRenderingContext2D,
         private camera: ICamera2D,
-        private renderables: Record<number, IRenderable2D>,
-        private unitLength: number
+        private map: IRenderable2D
     ) {
         this.buffer = document
             .createElement('canvas')
             .getContext('2d');
         this.context = context;
-        
-        this.renderables = renderables;
-        this.unitLength = unitLength;
+
         this.camera = camera;
     }
 
     render(state: GameState2D): void {
         this.clearBuffer();
 
-        this.drawMap(state);
+        this.map.draw(this.buffer, new Vector2D(0, 0));
+
         this.drawCanvas();
     }
 
@@ -39,34 +37,7 @@ class Renderer2D implements IRenderer<GameState2D> {
             0, 0, this.buffer.canvas.width, this.buffer.canvas.height);
     }
 
-    private drawMap(state: GameState2D) : void {
-        for (let i = 0; i < state.map.length; i++) {
-            const coordinates = this.getWorldCoordinates(
-                i, state.width);
-            const renderable = this.getRenderable(state.map, i);
-
-            if (renderable.inCamera(this.camera, coordinates)) {
-                let cameraFrameCoordinates = (
-                    this.camera.getCameraFrameCoordinates(coordinates));
     
-                renderable.draw(this.buffer, cameraFrameCoordinates);
-            }
-        }
-    }
-
-    private getWorldCoordinates(mapIndex, mapWidth) : Vector2D {
-        return new Vector2D(
-            (mapIndex % mapWidth) * this.unitLength,
-            Math.floor(mapIndex / mapWidth) * this.unitLength);
-    }
-
-    private getRenderable(map, mapIndex) : IRenderable2D {
-        const renderableIndex = map[mapIndex];
-        const renderable = this.renderables[renderableIndex];
-
-        return renderable;
-    }
-
     private drawCanvas() : void {
         this.context.canvas.width = this.camera.width;
         this.context.canvas.height = this.camera.height;
