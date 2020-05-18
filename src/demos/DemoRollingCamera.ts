@@ -7,6 +7,9 @@ import { ISimulator } from '../Simulator.js';
 import { Camera2D } from '../2d/Camera2D.js';
 import { Rectangle, IRenderable2D } from '../2d/Renderable2D.js';
 import { Map2D } from '../2d/Map2D.js';
+import { RenderRequestPool2D } from '../2d/RenderRequestPool2D.js';
+import { RenderRequest2D } from '../2d/RenderRequest2D.js';
+import { Vector } from '../Math.js';
 
 
 const MAP_ROWS: number = 10;
@@ -66,9 +69,13 @@ const canvas = document
 
 const camera = new Camera2D(
     new Vector2D(0, 0), CAMERA_WIDTH, CAMERA_HEIGHT);
-const map = new Map2D(
-    MAP, BRICKS, MAP_COLUMNS, UNIT_LENGTH, camera);
-const renderer = new Renderer2D(canvas, camera, map);
+
+const pool = new RenderRequestPool2D();
+pool.add(new RenderRequest2D(
+    new Map2D(MAP, BRICKS, MAP_COLUMNS, UNIT_LENGTH, camera),
+    new Vector2D(0, 0), 0));
+
+const renderer = new Renderer2D(canvas, camera, pool);
 
 const simulator = new RollingCameraSimulator(camera, .1);
 const gameLoop = new GameLoop(

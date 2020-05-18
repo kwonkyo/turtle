@@ -3,6 +3,7 @@ import { GameState2D } from './GameState2D.js';
 import { ICamera2D } from './Camera2D.js';
 import { Vector2D } from './Vector2D.js';
 import { IRenderable2D } from './Renderable2D.js';
+import { IRenderRequestPool2D } from './RenderRequestPool2D.js';
 
 
 class Renderer2D implements IRenderer<GameState2D> {
@@ -11,7 +12,7 @@ class Renderer2D implements IRenderer<GameState2D> {
     constructor(
         private context: CanvasRenderingContext2D,
         private camera: ICamera2D,
-        private map: IRenderable2D
+        private pool: IRenderRequestPool2D
     ) {
         this.buffer = document
             .createElement('canvas')
@@ -19,12 +20,16 @@ class Renderer2D implements IRenderer<GameState2D> {
         this.context = context;
 
         this.camera = camera;
+        this.pool = pool;
     }
 
     render(state: GameState2D): void {
         this.clearBuffer();
 
-        this.map.draw(this.buffer, new Vector2D(0, 0));
+        for (const request of this.pool.requests) {
+            request.renderable.draw(
+                this.buffer, request.position);
+        }
 
         this.drawCanvas();
     }

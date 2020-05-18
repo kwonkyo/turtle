@@ -9,6 +9,8 @@ import { EventControlHub } from '../ControlHub.js';
 import { KeyPressController } from '../Controller.js';
 import { Rectangle, IRenderable2D } from '../2d/Renderable2D.js';
 import { Map2D } from '../2d/Map2D.js';
+import { RenderRequestPool2D } from '../2d/RenderRequestPool2D.js';
+import { RenderRequest2D } from '../2d/RenderRequest2D.js';
 
 
 const MAP_ROWS: number = 17;
@@ -63,9 +65,13 @@ const camera = new Camera2D(
     CAMERA_INITIAL_POSITION, CAMERA_WIDTH, CAMERA_HEIGHT);
 const cameraPosition = new Camera2DPosition(
     camera, CAMERA_SPEED, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS);
-const map = new Map2D(
-    MAP, BRICKS, MAP_COLUMNS, UNIT_LENGTH, camera);
-const renderer = new Renderer2D(canvas, camera, map);
+
+const pool = new RenderRequestPool2D();
+pool.add(new RenderRequest2D(
+    new Map2D(MAP, BRICKS, MAP_COLUMNS, UNIT_LENGTH, camera),
+    new Vector2D(0, 0), 0));
+
+const renderer = new Renderer2D(canvas, camera, pool);
 
 const simulator = new NoSimulator();
 const gameLoop = new GameLoop(
