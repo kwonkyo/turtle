@@ -1,42 +1,47 @@
-import { linearInterpolate } from '../Math.js';
+import { linearInterpolate, IVector, Vector } from '../Math.js';
 
 
-class Vector2D {
-    public x: number;
-    public y: number;
+class Vector2D implements IVector {
+    private vector: Vector;
 
     constructor(x: number, y: number) {
-        this.x = x;
-        this.y = y;
+        this.vector = new Vector([x, y]);
     }
 
-    add(other: Vector2D) {
+    get x() { return this.vector.values[0]; }
+    set x(value) { this.vector.values[0] = value; }
+
+    get y() { return this.vector.values[1]; }
+    set y(value) { this.vector.values[1] = value; }
+
+    add(other: Vector2D) : Vector2D {
+        return this.fromVector(
+            this.vector.add(other.vector));
+    }
+
+    subtract(other: Vector2D) : Vector2D {
+        return this.fromVector(
+            this.vector.subtract(other.vector));
+    }
+
+    multiply(other: Vector2D) : Vector2D {
+        return this.fromVector(
+            this.vector.multiply(other.vector));
+    }
+
+    scale(magnitude: number) : Vector2D {
+        return this.fromVector(
+            this.vector.scale(magnitude));
+    }
+
+    interpolate(target: Vector2D, percent: number) : Vector2D {
+        return this.fromVector(
+            this.vector.interpolate(target.vector, percent));
+    }
+
+    private fromVector(vector: Vector) {
         return new Vector2D(
-            this.x + other.x,
-            this.y + other.y
-        );
-    }
-
-    subtract(other: Vector2D) {
-        return this.add(
-            new Vector2D(-other.x, -other.y)
-        );
-    }
-
-    multiply(other: Vector2D) {
-        return new Vector2D(
-            this.x * other.x, this.y * other.y
-        );
-    }
-
-    scale(magnitude: number) {
-        return this.multiply(new Vector2D(magnitude, magnitude));
-    }
-
-    interpolate(target: Vector2D, percent: number) {
-        return new Vector2D(
-            linearInterpolate(this.x, target.x, percent),
-            linearInterpolate(this.y, target.y, percent));
+            vector.values[0], vector.values[1]);
     }
 }
 
