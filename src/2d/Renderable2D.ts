@@ -8,34 +8,37 @@ interface IRenderable2D {
 }
 
 
-class Rectangle implements IRenderable2D {
+abstract class VertexBasedRenderable2D implements IRenderable2D {
+    inCamera(camera: ICamera2D, position: Vector2D) : boolean {
+        return this
+            .getVertices(position.x, position.y)
+            .some(v => camera.inField(v));
+    }
+
+    abstract draw(canvas: CanvasRenderingContext2D, position: Vector2D) : void;
+    protected abstract getVertices(x: number, y: number) : Vector2D[];
+}
+
+class Rectangle extends VertexBasedRenderable2D {
     constructor(
             private name: string,
             private color: string,
             private width: number,
             private height: number) {
+        super();
+
         this.name = name;
         this.color = color;
         this.width = width;
         this.height = height;
     }
 
-    inCamera(camera: ICamera2D, position: Vector2D) : boolean {
-        return this
-            .getCorners(position.x, position.y)
-            .some(v => camera.inField(v));
-    }
-
     draw(canvas: CanvasRenderingContext2D, position: Vector2D) : void {
         canvas.fillStyle = this.color;
-
-        const [xClamped, widthClamped] = this.clamp1d(position.x, this.width);
-        const [yClamped, heightClamped] = this.clamp1d(position.y, this.height);
-
-        canvas.fillRect(xClamped, yClamped, widthClamped, heightClamped);
+        canvas.fillRect(position.x, position.y, this.width, this.height);
     }
 
-    private getCorners(x: number, y: number) : Vector2D[] {
+    protected getVertices(x: number, y: number): Vector2D[] {
         return [
             new Vector2D(x, y),
             new Vector2D(x + this.width, y),
@@ -43,19 +46,42 @@ class Rectangle implements IRenderable2D {
             new Vector2D(x + this.width, y + this.height)
         ];
     }
+}
 
-    private clamp1d(position: number, length: number) : number[] {
-        if (position < 0) {
-            length += position;
-            position = 0;
-        }
 
-        return [position, length];
+class ImageRenderable extends VertexBasedRenderable2D {
+    private image: HTMLImageElement;
+
+    constructor(
+            source: string, private width: number, private height: number) {
+        super();
+
+        this.image = new Image();
+        this.image.src = source;
+
+        this.width = width;
+        this.height = height;
+    }
+
+    draw(canvas: CanvasRenderingContext2D, position: Vector2D): void {
+        canvas.drawImage(
+            this.image, 0, 0, this.image.width, this.image.height,
+            position.x, position.y, this.width, this.height);
+    }
+
+    protected getVertices(x: number, y: number): Vector2D[] {
+        return [
+            new Vector2D(x, y),
+            new Vector2D(x + this.width, y),
+            new Vector2D(x, y + this.height),
+            new Vector2D(x + this.width, y + this.height)
+        ];
     }
 }
 
 
 export {
     IRenderable2D,
-    Rectangle
+    Rectangle,
+    ImageRenderable
 }

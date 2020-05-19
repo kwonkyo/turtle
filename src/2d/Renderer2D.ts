@@ -28,7 +28,9 @@ class Renderer2D implements IRenderer<GameState2D> {
 
         for (const request of this.pool.requests) {
             if (request.renderable.inCamera(this.camera, request.position)) {
-                request.renderable.draw(this.buffer, request.position);
+                request.renderable.draw(
+                    this.buffer,
+                    this.camera.getCameraFrameCoordinates(request.position));
             }
         }
 
