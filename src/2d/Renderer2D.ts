@@ -27,8 +27,9 @@ class Renderer2D implements IRenderer<GameState2D> {
         this.clearBuffer();
 
         for (const request of this.pool.requests) {
-            request.renderable.draw(
-                this.buffer, request.position);
+            if (request.renderable.inCamera(this.camera, request.position)) {
+                request.renderable.draw(this.buffer, request.position);
+            }
         }
 
         this.drawCanvas();
