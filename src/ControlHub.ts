@@ -29,7 +29,7 @@ class EventControlHub implements IControlHub<Event> {
     receive(event: Event) : void {
         let controlEvent = this.createControlEvent(event);
 
-        this.updateControllers(controlEvent);
+        this.updateControlStates(controlEvent);
         this.updateControllables();
     }
 
@@ -42,7 +42,7 @@ class EventControlHub implements IControlHub<Event> {
         }
     }
 
-    private updateControllers(controlEvent: IControlEvent) : void {
+    private updateControlStates(controlEvent: IControlEvent) : void {
         this.controllers.forEach(controller => {
             if (controller.receives(controlEvent)) {
                 controller.updateControlState(controlEvent);
