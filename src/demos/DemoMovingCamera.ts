@@ -4,7 +4,7 @@ import { GameState2D } from '../2d/GameState2D.js';
 import { Renderer2D } from '../2d/Renderer2D.js';
 import { Vector2D } from '../2d/Vector2D.js';
 import { ISimulator } from '../Simulator.js';
-import { Camera2D, Camera2DPosition } from '../2d/Camera2D.js';
+import { Camera2D, KeyPressControlledCameraPosition2D } from '../2d/Camera2D.js';
 import { EventControlHub } from '../ControlHub.js';
 import { KeyPressController } from '../Controller.js';
 import { Rectangle, IRenderable2D } from '../2d/Renderable2D.js';
@@ -63,8 +63,18 @@ const canvas = document
 
 const camera = new Camera2D(
     CAMERA_INITIAL_POSITION, CAMERA_WIDTH, CAMERA_HEIGHT);
-const cameraPosition = new Camera2DPosition(
+const cameraPosition = new KeyPressControlledCameraPosition2D(
     camera, CAMERA_SPEED, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS);
+
+const controlHub = new EventControlHub(
+    [cameraPosition],
+    [
+        KeyPressController.LEFT_ARROW,
+        KeyPressController.UP_ARROW,
+        KeyPressController.RIGHT_ARROW,
+        KeyPressController.DOWN_ARROW
+    ]
+);
 
 const pool = new RenderRequestPool2D();
 pool.add(new RenderRequest2D(
@@ -76,16 +86,6 @@ const renderer = new Renderer2D(canvas, camera, pool);
 const simulator = new NoSimulator();
 const gameLoop = new GameLoop(
     60 / 1000, simulator, renderer, INITIAL_STATE);
-
-const controlHub = new EventControlHub(
-    [cameraPosition],
-    [
-        KeyPressController.LEFT_ARROW,
-        KeyPressController.UP_ARROW,
-        KeyPressController.RIGHT_ARROW,
-        KeyPressController.DOWN_ARROW
-    ]
-);
 
 
 window.addEventListener('keydown', e => controlHub.receive(e));

@@ -1,4 +1,6 @@
 import { linearInterpolate, IVector, Vector } from '../Math.js';
+import { IControllable } from '../Controllable.js';
+import { KeyPressControlState, ControlType, KEYCODE } from '../ControlState.js';
 
 
 class Vector2D implements IVector {
@@ -46,6 +48,35 @@ class Vector2D implements IVector {
 }
 
 
+class KeyPressControlledPosition2D implements IControllable<KeyPressControlState> {
+    type: ControlType = ControlType.KEYPRESS;
+
+    constructor(
+            private speed: number,
+            private position: Vector2D) {
+        this.speed = speed;
+        this.position = position;
+    }
+
+    obey(controlState: KeyPressControlState) : void {
+        if (!controlState.pressed) {
+            return;
+        }
+
+        if (controlState.keyCode === KEYCODE.LEFT_ARROW) {
+            this.position.x -= this.speed;
+        } else if (controlState.keyCode === KEYCODE.UP_ARROW) {
+            this.position.y -= this.speed;
+        } else if (controlState.keyCode === KEYCODE.RIGHT_ARROW) {
+            this.position.x += this.speed;
+        } else if (controlState.keyCode === KEYCODE.DOWN_ARROW) {
+            this.position.y += this.speed;
+        }
+    }
+}
+
+
 export {
-    Vector2D
+    Vector2D,
+    KeyPressControlledPosition2D
 }

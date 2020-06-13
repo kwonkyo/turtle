@@ -2,9 +2,9 @@ import { GameStatus } from '../GameStatus.js';
 import { GameLoop } from '../GameLoop.js';
 import { GameState2D } from '../2d/GameState2D.js';
 import { Renderer2D } from '../2d/Renderer2D.js';
-import { Vector2D } from '../2d/Vector2D.js';
+import { Vector2D, KeyPressControlledPosition2D } from '../2d/Vector2D.js';
 import { ISimulator } from '../Simulator.js';
-import { Camera2D, Camera2DPosition } from '../2d/Camera2D.js';
+import { Camera2D, KeyPressControlledCameraPosition2D } from '../2d/Camera2D.js';
 import { EventControlHub } from '../ControlHub.js';
 import { KeyPressController } from '../Controller.js';
 import { Rectangle, IRenderable2D, ImageRenderable } from '../2d/Renderable2D.js';
@@ -52,7 +52,7 @@ const INITIAL_STATE: GameState2D = new GameState2D(GameStatus.CONTINUE);
 
 const KNIGHT_WIDTH: number = 2.5 * UNIT_LENGTH;
 const KNIGHT_HEIGHT: number = 2.5 * UNIT_LENGTH;
-const KNIGHT_INITIAL_POSITION: Vector2D = new Vector2D(
+const KNIGHT_POSITION: Vector2D = new Vector2D(
     3 * UNIT_LENGTH, 14 * UNIT_LENGTH - KNIGHT_HEIGHT);
 
 
@@ -66,27 +66,19 @@ const canvas = document
     .querySelector('canvas')
     .getContext('2d');
 
+const knightPosition = new KeyPressControlledPosition2D(
+    CAMERA_SPEED, KNIGHT_POSITION);
+
 const camera = new Camera2D(
     CAMERA_INITIAL_POSITION, CAMERA_WIDTH, CAMERA_HEIGHT);
-const cameraPosition = new Camera2DPosition(
+const cameraPosition = new KeyPressControlledCameraPosition2D(
     camera, CAMERA_SPEED, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS);
 
-const pool = new RenderRequestPool2D();
-pool.add(new RenderRequest2D(
-    new Map2D(MAP, BRICKS, MAP_COLUMNS, UNIT_LENGTH, camera),
-    new Vector2D(0, 0), 0));
-pool.add(new RenderRequest2D(
-    new ImageRenderable('assets/knight.png', KNIGHT_WIDTH, KNIGHT_HEIGHT),
-    KNIGHT_INITIAL_POSITION, 1));
-
-const renderer = new Renderer2D(canvas, camera, pool);
-
-const simulator = new NoSimulator();
-const gameLoop = new GameLoop(
-    60 / 1000, simulator, renderer, INITIAL_STATE);
-
 const controlHub = new EventControlHub(
-    [cameraPosition],
+    [
+        cameraPosition,
+        knightPosition
+    ],
     [
         KeyPressController.LEFT_ARROW,
         KeyPressController.UP_ARROW,
@@ -94,6 +86,20 @@ const controlHub = new EventControlHub(
         KeyPressController.DOWN_ARROW
     ]
 );
+
+const pool = new RenderRequestPool2D();
+pool.add(new RenderRequest2D(
+    new Map2D(MAP, BRICKS, MAP_COLUMNS, UNIT_LENGTH, camera),
+    new Vector2D(0, 0), 0));
+pool.add(new RenderRequest2D(
+    new ImageRenderable('assets/knight.png', KNIGHT_WIDTH, KNIGHT_HEIGHT),
+    KNIGHT_POSITION, 1));
+
+const renderer = new Renderer2D(canvas, camera, pool);
+
+const simulator = new NoSimulator();
+const gameLoop = new GameLoop(
+    60 / 1000, simulator, renderer, INITIAL_STATE);
 
 
 window.addEventListener('keydown', e => controlHub.receive(e));

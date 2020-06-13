@@ -1,5 +1,4 @@
-import { Vector2D } from "./Vector2D";
-import { IControllable } from "../Controllable.js";
+import { Vector2D, KeyPressControlledPosition2D } from "./Vector2D.js";
 import { KeyPressControlState, KEYCODE } from "../ControlState.js";
 import { ControlType } from "../ControlType.js";
 
@@ -51,36 +50,23 @@ class Camera2D implements ICamera2D {
 }
 
 
-class Camera2DPosition implements IControllable<KeyPressControlState> {
+class KeyPressControlledCameraPosition2D extends KeyPressControlledPosition2D {
     type: ControlType = ControlType.KEYPRESS;
 
     constructor(
             private camera: Camera2D,
-            private speed: number,
+            speed: number,
             private unitLength: number,
             private mapRows: number,
             private mapColumns: number) {
-        this.camera = camera;
-        this.speed = speed;
+        super(speed, camera.position);
         this.unitLength = unitLength;
         this.mapRows = mapRows;
         this.mapColumns = mapColumns;
     }
 
     obey(controlState: KeyPressControlState) : void {
-        if (!controlState.pressed) {
-            return;
-        }
-
-        if (controlState.keyCode === KEYCODE.LEFT_ARROW) {
-            this.camera.position.x -= this.speed;
-        } else if (controlState.keyCode === KEYCODE.UP_ARROW) {
-            this.camera.position.y -= this.speed;
-        } else if (controlState.keyCode === KEYCODE.RIGHT_ARROW) {
-            this.camera.position.x += this.speed;
-        } else if (controlState.keyCode === KEYCODE.DOWN_ARROW) {
-            this.camera.position.y += this.speed;
-        }
+        super.obey(controlState);
 
         this.camera.position.x = Math.min(
             Math.max(0, this.camera.position.x),
@@ -98,5 +84,5 @@ class Camera2DPosition implements IControllable<KeyPressControlState> {
 export {
     ICamera2D,
     Camera2D,
-    Camera2DPosition
+    KeyPressControlledCameraPosition2D
 }
