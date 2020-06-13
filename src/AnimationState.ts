@@ -1,0 +1,3 @@
+interface IAnimationState {
+    name: string;
+}

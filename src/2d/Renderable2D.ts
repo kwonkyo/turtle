@@ -1,5 +1,6 @@
 import { ICamera2D } from './Camera2D.js';
 import { Vector2D } from './Vector2D.js';
+import { IFrame2D } from './Frame2D.js';
 
 
 interface IRenderable2D {
@@ -49,23 +50,20 @@ class Rectangle extends VertexBasedRenderable2D {
 }
 
 
-class ImageRenderable extends VertexBasedRenderable2D {
-    private image: HTMLImageElement;
-
+class FrameRenderable2D extends VertexBasedRenderable2D {
     constructor(
-            source: string, private width: number, private height: number) {
+            public frame: IFrame2D, private width: number, private height: number) {
         super();
-
-        this.image = new Image();
-        this.image.src = source;
 
         this.width = width;
         this.height = height;
     }
 
     draw(canvas: CanvasRenderingContext2D, position: Vector2D): void {
+        let frame = this.frame.getFrame();
+
         canvas.drawImage(
-            this.image, 0, 0, this.image.width, this.image.height,
+            frame, 0, 0, frame.width, frame.height,
             position.x, position.y, this.width, this.height);
     }
 
@@ -83,5 +81,5 @@ class ImageRenderable extends VertexBasedRenderable2D {
 export {
     IRenderable2D,
     Rectangle,
-    ImageRenderable
+    FrameRenderable2D
 }

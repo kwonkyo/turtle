@@ -7,10 +7,14 @@ import { ISimulator } from '../Simulator.js';
 import { Camera2D, KeyPressControlledCameraPosition2D } from '../2d/Camera2D.js';
 import { EventControlHub } from '../ControlHub.js';
 import { KeyPressController } from '../Controller.js';
-import { Rectangle, IRenderable2D, ImageRenderable } from '../2d/Renderable2D.js';
+import { Rectangle, IRenderable2D, FrameRenderable2D } from '../2d/Renderable2D.js';
 import { Map2D } from '../2d/Map2D.js';
 import { RenderRequestPool2D } from '../2d/RenderRequestPool2D.js';
 import { RenderRequest2D } from '../2d/RenderRequest2D.js';
+import { Frame2D, FrameAnimation2D } from '../2d/Frame2D.js';
+import { Animator, IAnimator } from '../Animator.js';
+import { IAnimatable } from '../Animatable.js';
+import { IModel } from '../Model.js';
 
 
 const MAP_ROWS: number = 17;
@@ -50,14 +54,58 @@ const MAP: number[] = [
 
 const INITIAL_STATE: GameState2D = new GameState2D(GameStatus.CONTINUE);
 
-const KNIGHT_WIDTH: number = 2.5 * UNIT_LENGTH;
-const KNIGHT_HEIGHT: number = 2.5 * UNIT_LENGTH;
-const KNIGHT_POSITION: Vector2D = new Vector2D(
-    3 * UNIT_LENGTH, 14 * UNIT_LENGTH - KNIGHT_HEIGHT);
+const SPRITE_WIDTH: number = 2.5 * UNIT_LENGTH;
+const SPRITE_HEIGHT: number = 2 * UNIT_LENGTH;
+const SPRITE_POSITION: Vector2D = new Vector2D(
+    3 * UNIT_LENGTH, 12 * UNIT_LENGTH);
 
 
-class NoSimulator implements ISimulator<GameState2D> {
-    integrate = (state: GameState2D, elapsedTime: number) : GameState2D => state;
+class GolemAnimationState implements IAnimationState {
+    constructor(public name: string) {
+        this.name = name;
+    }
+
+    static IDLE = new GolemAnimationState('idle');
+}
+
+class Golem implements IModel, IAnimatable {
+    constructor(public position: Vector2D) {
+        this.position = position;
+    }
+
+    getAnimationState(): IAnimationState {
+        return GolemAnimationState.IDLE;
+    }
+}
+
+class GolemAnimation extends FrameAnimation2D {
+    static FRAMES : Record<string, Frame2D[]> = {
+        "idle": [...Array(11).keys()]
+            .map(x => String(x).padStart(3, '0'))
+            .map(x => `assets/Golem_01/Idle Blink/Golem_01_Idle Blinking_${x}.png`)
+            .map(x => new Frame2D(x))
+    }
+
+    constructor() {
+        super(GolemAnimation.FRAMES, 60, GolemAnimationState.IDLE);
+    }
+}
+
+
+const golem = new Golem(SPRITE_POSITION);
+const golemAnimation = new GolemAnimation();
+
+class GolemSimulator implements ISimulator<GameState2D> {
+    constructor(private animator: IAnimator<Golem, GolemAnimation>) {
+        this.animator = animator;
+    }
+
+    integrate(state: GameState2D, elapsedTime: number) : GameState2D {
+        this.animator.animate(golem, golemAnimation);
+
+        return state;
+    }
+
     interpolate = (state: GameState2D, target: GameState2D, percent: number) : GameState2D => state;
 }
 
@@ -67,7 +115,7 @@ const canvas = document
     .getContext('2d');
 
 const knightPosition = new KeyPressControlledPosition2D(
-    CAMERA_SPEED, KNIGHT_POSITION);
+    CAMERA_SPEED, SPRITE_POSITION);
 
 const camera = new Camera2D(
     CAMERA_INITIAL_POSITION, CAMERA_WIDTH, CAMERA_HEIGHT);
@@ -92,12 +140,14 @@ pool.add(new RenderRequest2D(
     new Map2D(MAP, BRICKS, MAP_COLUMNS, UNIT_LENGTH, camera),
     new Vector2D(0, 0), 0));
 pool.add(new RenderRequest2D(
-    new ImageRenderable('assets/knight.png', KNIGHT_WIDTH, KNIGHT_HEIGHT),
-    KNIGHT_POSITION, 1));
+    new FrameRenderable2D(
+        golemAnimation, SPRITE_WIDTH, SPRITE_HEIGHT),
+    SPRITE_POSITION, 1));
 
 const renderer = new Renderer2D(canvas, camera, pool);
 
-const simulator = new NoSimulator();
+const animator = new Animator();
+const simulator = new GolemSimulator(animator);
 const gameLoop = new GameLoop(
     60 / 1000, simulator, renderer, INITIAL_STATE);
 
