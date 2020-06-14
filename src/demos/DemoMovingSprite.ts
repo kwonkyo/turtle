@@ -24,7 +24,7 @@ const CAMERA_WIDTH: number = UNIT_LENGTH * 10;
 const CAMERA_HEIGHT: number = UNIT_LENGTH * 10;
 const CAMERA_INITIAL_POSITION: Vector2D = new Vector2D(
     0, UNIT_LENGTH * MAP_ROWS - CAMERA_HEIGHT);
-const CAMERA_SPEED: number = 8;
+const CAMERA_SPEED: number = 2;
 
 const BRICKS: Record<number, IRenderable2D>= {
     0: new Rectangle('AQUA_SKY', '#7FDBFF', UNIT_LENGTH, UNIT_LENGTH),
@@ -58,6 +58,10 @@ const SPRITE_WIDTH: number = 2.5 * UNIT_LENGTH;
 const SPRITE_HEIGHT: number = 2 * UNIT_LENGTH;
 const SPRITE_POSITION: Vector2D = new Vector2D(
     3 * UNIT_LENGTH, 12 * UNIT_LENGTH);
+const SPRITE_ACCELERATION: Vector2D = new Vector2D(1.8, 1.8);
+const SPRITE_MIN_SPEED: number = 0.1;
+
+const FRICTION: number = 2;
 
 
 class GolemAnimationState implements IAnimationState {
@@ -66,6 +70,7 @@ class GolemAnimationState implements IAnimationState {
     }
 
     static IDLE = new GolemAnimationState('idle');
+    static WALKING = new GolemAnimationState('walking');
 }
 
 class Golem implements IModel, IAnimatable {
@@ -77,7 +82,13 @@ class Golem implements IModel, IAnimatable {
     }
 
     getAnimationState(): IAnimationState {
-        return GolemAnimationState.IDLE;
+        if (this.velocity.x === 0 && this.velocity.y === 0) {
+            return GolemAnimationState.IDLE;
+        } else if (this.velocity.y === 0) {
+            return GolemAnimationState.WALKING;
+        } else {
+            return GolemAnimationState.IDLE;
+        }
     }
 }
 
@@ -100,15 +111,31 @@ class GolemAnimation extends FrameAnimation2D {
 
 
 const golem = new Golem(SPRITE_POSITION, new Vector2D(0, 0));
+const golemVelocity = new KeyPressControlledVector2D(
+    SPRITE_ACCELERATION, golem.velocity);
 const golemAnimation = new GolemAnimation();
 
 class GolemSimulator implements ISimulator<GameState2D> {
-    constructor(private animator: IAnimator<Golem, GolemAnimation>) {
+    constructor(
+            private animator: IAnimator<Golem, GolemAnimation>) {
         this.animator = animator;
     }
 
     integrate(state: GameState2D, elapsedTime: number) : GameState2D {
         this.animator.animate(golem, golemAnimation);
+
+        golem.position.x += golem.velocity.x;
+        golem.position.y += golem.velocity.y;
+
+        golem.velocity.x /= FRICTION;
+        if (golem.velocity.x < SPRITE_MIN_SPEED) {
+            golem.velocity.x = 0.;
+        }
+
+        golem.velocity.y /= FRICTION;
+        if (golem.velocity.y < SPRITE_MIN_SPEED) {
+            golem.velocity.y = 0.;
+        }
 
         return state;
     }
@@ -121,9 +148,6 @@ const canvas = document
     .querySelector('canvas')
     .getContext('2d');
 
-const golemPosition = new KeyPressControlledVector2D(
-    new Vector2D(1, 1).scale(CAMERA_SPEED), golem.position);
-
 const camera = new Camera2D(
     CAMERA_INITIAL_POSITION, CAMERA_WIDTH, CAMERA_HEIGHT);
 const cameraPosition = new KeyPressControlledCameraPosition2D(
@@ -132,7 +156,7 @@ const cameraPosition = new KeyPressControlledCameraPosition2D(
 const controlHub = new EventControlHub(
     [
         cameraPosition,
-        golemPosition
+        golemVelocity
     ],
     [
         KeyPressController.LEFT_ARROW,
