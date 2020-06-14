@@ -15,6 +15,7 @@ import { Frame2D, FrameAnimation2D } from '../2d/Frame2D.js';
 import { Animator, IAnimator } from '../Animator.js';
 import { IAnimatable } from '../Animatable.js';
 import { IModel } from '../Model.js';
+import { linearInterpolate } from '../Math.js';
 
 
 const MAP_ROWS: number = 17;
@@ -153,6 +154,18 @@ const camera = new Camera2D(
 const cameraPosition = new KeyPressControlledCameraPosition2D(
     camera, CAMERA_SPEED, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS);
 
+class CameraSimulator implements ISimulator<GameState2D> {
+    integrate(state: GameState2D, elapsedTime: number): GameState2D {
+        if (golem.getAnimationState() == GolemAnimationState.IDLE) {
+            camera.position.x = linearInterpolate(camera.position.x, golem.position.x, 0.01);
+        }
+
+        return state;
+    }
+
+    interpolate = (state: GameState2D, target: GameState2D, percent: number) : GameState2D => state;
+}
+
 const controlHub = new EventControlHub(
     [
         cameraPosition,
@@ -178,7 +191,21 @@ pool.add(new RenderRequest2D(
 const renderer = new Renderer2D(canvas, camera, pool);
 
 const animator = new Animator();
-const simulator = new GolemSimulator(animator);
+const cameraSimulator = new CameraSimulator();
+const golemSimulator = new GolemSimulator(animator);
+
+class WorldSimulator implements ISimulator<GameState2D> {
+    integrate(state: GameState2D, elapsedTime: number): GameState2D {
+        golemSimulator.integrate(state, elapsedTime);
+        cameraSimulator.integrate(state, elapsedTime);
+
+        return state;
+    }
+
+    interpolate = (state: GameState2D, target: GameState2D, percent: number) : GameState2D => state;
+}
+
+const simulator = new WorldSimulator();
 const gameLoop = new GameLoop(
     60 / 1000, simulator, renderer, INITIAL_STATE);
 
