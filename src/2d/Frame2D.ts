@@ -22,12 +22,15 @@ class Frame2D implements IFrame2D {
 class FrameAnimation2D implements IFrame2D, IAnimation {
     private currentAnimationState: IAnimationState;
     private currentFrameIndex: number;
+    private lastFrameIncrementTime: number = Date.now();
+    private framePeriod: number;
 
     constructor(
             private frames: Record<string, Frame2D[]>,
             private frameRate: number,
             initialAnimationState: IAnimationState) {
         this.frames = frames;
+        this.framePeriod = 1. / frameRate;
         this.currentAnimationState = initialAnimationState;
         this.currentFrameIndex = 0;
     }
@@ -38,8 +41,13 @@ class FrameAnimation2D implements IFrame2D, IAnimation {
             [this.currentFrameIndex]
             .getFrame();
         
-        this.currentFrameIndex++;
-        this.currentFrameIndex %= this.frames[this.currentAnimationState.name].length;
+        let currentTime = Date.now();
+        let elapsedTime = currentTime - this.lastFrameIncrementTime;
+        if (elapsedTime >= this.framePeriod) {
+            this.currentFrameIndex++;
+            this.currentFrameIndex %= this.frames[this.currentAnimationState.name].length;
+            this.lastFrameIncrementTime = currentTime;
+        }
 
         return frame;
     }

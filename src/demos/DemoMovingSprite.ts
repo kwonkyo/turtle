@@ -2,7 +2,7 @@ import { GameStatus } from '../GameStatus.js';
 import { GameLoop } from '../GameLoop.js';
 import { GameState2D } from '../2d/GameState2D.js';
 import { Renderer2D } from '../2d/Renderer2D.js';
-import { Vector2D, KeyPressControlledPosition2D } from '../2d/Vector2D.js';
+import { Vector2D, KeyPressControlledVector2D } from '../2d/Vector2D.js';
 import { ISimulator } from '../Simulator.js';
 import { Camera2D, KeyPressControlledCameraPosition2D } from '../2d/Camera2D.js';
 import { EventControlHub } from '../ControlHub.js';
@@ -69,8 +69,11 @@ class GolemAnimationState implements IAnimationState {
 }
 
 class Golem implements IModel, IAnimatable {
-    constructor(public position: Vector2D) {
+    constructor(
+            public position: Vector2D,
+            public velocity: Vector2D) {
         this.position = position;
+        this.velocity = velocity;
     }
 
     getAnimationState(): IAnimationState {
@@ -82,17 +85,21 @@ class GolemAnimation extends FrameAnimation2D {
     static FRAMES : Record<string, Frame2D[]> = {
         "idle": [...Array(11).keys()]
             .map(x => String(x).padStart(3, '0'))
-            .map(x => `assets/Golem_01/Idle Blink/Golem_01_Idle Blinking_${x}.png`)
+            .map(x => `assets/Golem_01/Idle/Golem_01_Idle_${x}.png`)
+            .map(x => new Frame2D(x)),
+        "walking": [...Array(17).keys()]
+            .map(x => String(x).padStart(3, '0'))
+            .map(x => `assets/Golem_01/Walking/Golem_01_Walking_${x}.png`)
             .map(x => new Frame2D(x))
     }
 
     constructor() {
-        super(GolemAnimation.FRAMES, 60, GolemAnimationState.IDLE);
+        super(GolemAnimation.FRAMES, 30 / 1000, GolemAnimationState.IDLE);
     }
 }
 
 
-const golem = new Golem(SPRITE_POSITION);
+const golem = new Golem(SPRITE_POSITION, new Vector2D(0, 0));
 const golemAnimation = new GolemAnimation();
 
 class GolemSimulator implements ISimulator<GameState2D> {
@@ -114,8 +121,8 @@ const canvas = document
     .querySelector('canvas')
     .getContext('2d');
 
-const knightPosition = new KeyPressControlledPosition2D(
-    CAMERA_SPEED, SPRITE_POSITION);
+const golemPosition = new KeyPressControlledVector2D(
+    new Vector2D(1, 1).scale(CAMERA_SPEED), golem.position);
 
 const camera = new Camera2D(
     CAMERA_INITIAL_POSITION, CAMERA_WIDTH, CAMERA_HEIGHT);
@@ -125,7 +132,7 @@ const cameraPosition = new KeyPressControlledCameraPosition2D(
 const controlHub = new EventControlHub(
     [
         cameraPosition,
-        knightPosition
+        golemPosition
     ],
     [
         KeyPressController.LEFT_ARROW,
@@ -142,7 +149,7 @@ pool.add(new RenderRequest2D(
 pool.add(new RenderRequest2D(
     new FrameRenderable2D(
         golemAnimation, SPRITE_WIDTH, SPRITE_HEIGHT),
-    SPRITE_POSITION, 1));
+    golem.position, 1));
 
 const renderer = new Renderer2D(canvas, camera, pool);
 

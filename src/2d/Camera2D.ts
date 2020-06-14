@@ -1,4 +1,4 @@
-import { Vector2D, KeyPressControlledPosition2D } from "./Vector2D.js";
+import { Vector2D, KeyPressControlledVector2D } from "./Vector2D.js";
 import { KeyPressControlState, KEYCODE } from "../ControlState.js";
 import { ControlType } from "../ControlType.js";
 
@@ -50,7 +50,7 @@ class Camera2D implements ICamera2D {
 }
 
 
-class KeyPressControlledCameraPosition2D extends KeyPressControlledPosition2D {
+class KeyPressControlledCameraPosition2D extends KeyPressControlledVector2D {
     type: ControlType = ControlType.KEYPRESS;
 
     constructor(
@@ -59,7 +59,8 @@ class KeyPressControlledCameraPosition2D extends KeyPressControlledPosition2D {
             private unitLength: number,
             private mapRows: number,
             private mapColumns: number) {
-        super(speed, camera.position);
+        super(new Vector2D(1, 1).scale(speed), camera.position);
+
         this.unitLength = unitLength;
         this.mapRows = mapRows;
         this.mapColumns = mapColumns;

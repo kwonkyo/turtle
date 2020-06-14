@@ -48,14 +48,14 @@ class Vector2D implements IVector {
 }
 
 
-class KeyPressControlledPosition2D implements IControllable<KeyPressControlState> {
+class KeyPressControlledVector2D implements IControllable<KeyPressControlState> {
     type: ControlType = ControlType.KEYPRESS;
 
     constructor(
-            private speed: number,
-            private position: Vector2D) {
-        this.speed = speed;
-        this.position = position;
+            private dv: Vector2D,
+            private v0: Vector2D) {
+        this.dv = dv;
+        this.v0 = v0;
     }
 
     obey(controlState: KeyPressControlState) : void {
@@ -64,13 +64,13 @@ class KeyPressControlledPosition2D implements IControllable<KeyPressControlState
         }
 
         if (controlState.keyCode === KEYCODE.LEFT_ARROW) {
-            this.position.x -= this.speed;
+            this.v0.x -= this.dv.x;
         } else if (controlState.keyCode === KEYCODE.UP_ARROW) {
-            this.position.y -= this.speed;
+            this.v0.y -= this.dv.y;
         } else if (controlState.keyCode === KEYCODE.RIGHT_ARROW) {
-            this.position.x += this.speed;
+            this.v0.x += this.dv.x;
         } else if (controlState.keyCode === KEYCODE.DOWN_ARROW) {
-            this.position.y += this.speed;
+            this.v0.y += this.dv.y;
         }
     }
 }
@@ -78,5 +78,5 @@ class KeyPressControlledPosition2D implements IControllable<KeyPressControlState
 
 export {
     Vector2D,
-    KeyPressControlledPosition2D
+    KeyPressControlledVector2D
 }
