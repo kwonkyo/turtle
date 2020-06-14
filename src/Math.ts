@@ -51,7 +51,12 @@ class Vector implements IVector {
 }
 
 
-function linearInterpolate(start: number, end: number, percent: number) : number {
+function linearInterpolate(
+        start: number, end: number, percent: number, eps: number=1e-3) : number {
+    if (Math.abs(start - end) < eps) {
+        return end;
+    }
+
     return start * (1 - percent) + end * percent;
 }
 
