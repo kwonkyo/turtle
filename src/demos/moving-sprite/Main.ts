@@ -9,8 +9,7 @@ import { RenderRequestPool2D } from '../../2d/RenderRequestPool2D.js';
 import { RenderRequest2D } from '../../2d/RenderRequest2D.js';
 import { 
     GOLEM_INITIAL_POSITION, GOLEM_ACCELERATION, CAMERA_INITIAL_POSITION,
-    CAMERA_WIDTH, CAMERA_HEIGHT, CAMERA_SPEED,
-    UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS, MAP, BRICKS,
+    CAMERA_WIDTH, CAMERA_HEIGHT, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS, MAP, BRICKS,
     GOLEM_DISPLAY_WIDTH, GOLEM_DISPLAY_HEIGHT, INITIAL_STATE } from './Constants.js';
 import { Golem } from './Golem.js';
 import { GolemFrame } from './GolemFrame.js';

@@ -11,7 +11,6 @@ export const CAMERA_WIDTH: number = UNIT_LENGTH * 10;
 export const CAMERA_HEIGHT: number = UNIT_LENGTH * 10;
 export const CAMERA_INITIAL_POSITION: Vector2D = new Vector2D(
     0, UNIT_LENGTH * MAP_ROWS - CAMERA_HEIGHT);
-export const CAMERA_SPEED: number = 2;
 
 export const BRICKS: Record<number, IRenderable2D>= {
     0: new Rectangle('AQUA_SKY', '#7FDBFF', UNIT_LENGTH, UNIT_LENGTH),
