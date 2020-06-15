@@ -6,6 +6,8 @@ import { GolemAnimationState } from "./GolemAnimationState.js";
 
 
 class Golem implements IModel, IAnimatable {
+    private direction: number = 1;
+
     constructor(
             public position: Vector2D,
             public velocity: Vector2D) {
@@ -15,11 +17,18 @@ class Golem implements IModel, IAnimatable {
 
     getAnimationState(): IAnimationState {
         if (this.velocity.x === 0 && this.velocity.y === 0) {
-            return GolemAnimationState.IDLE;
-        } else if (this.velocity.y === 0) {
+            return this.direction === -1
+                ? GolemAnimationState.IDLE_LEFT
+                : GolemAnimationState.IDLE;
+        }
+        
+        if (this.velocity.x > 0) {
+            this.direction = 1;
             return GolemAnimationState.WALKING;
-        } else {
-            return GolemAnimationState.IDLE;
+        }
+        if (this.velocity.x < 0) {
+            this.direction = -1;
+            return GolemAnimationState.WALKING_LEFT;
         }
     }
 }

@@ -7,7 +7,9 @@ class GolemAnimationState implements IAnimationState {
     }
 
     static IDLE = new GolemAnimationState('idle');
+    static IDLE_LEFT = new GolemAnimationState('idle-left');
     static WALKING = new GolemAnimationState('walking');
+    static WALKING_LEFT = new GolemAnimationState('walking-left');
 }
 
 

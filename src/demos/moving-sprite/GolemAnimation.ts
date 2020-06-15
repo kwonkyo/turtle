@@ -8,10 +8,18 @@ class GolemAnimation extends FrameAnimation2D {
             .map(x => String(x).padStart(3, '0'))
             .map(x => `assets/Golem_01/Idle/Golem_01_Idle_${x}.png`)
             .map(x => new Frame2D(x)),
+        "idle-left": [...Array(11).keys()]
+            .map(x => String(x).padStart(3, '0'))
+            .map(x => `assets/Golem_01/Idle Left/Golem_01_Idle_${x}.png`)
+            .map(x => new Frame2D(x)),
         "walking": [...Array(17).keys()]
             .map(x => String(x).padStart(3, '0'))
             .map(x => `assets/Golem_01/Walking/Golem_01_Walking_${x}.png`)
-            .map(x => new Frame2D(x))
+            .map(x => new Frame2D(x)),
+        "walking-left": [...Array(17).keys()]
+            .map(x => String(x).padStart(3, '0'))
+            .map(x => `assets/Golem_01/Walking Left/Golem_01_Walking_${x}.png`)
+            .map(x => new Frame2D(x)),
     }
 
     constructor() {

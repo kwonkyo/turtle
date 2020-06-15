@@ -24,12 +24,12 @@ class GolemPhysicsSimulator implements ISimulator<GameState2D> {
         this.golem.position.y += this.golem.velocity.y * elapsedTime;
 
         this.golem.velocity.x /= FLOOR_FRICTION;
-        if (this.golem.velocity.x < GOLEM_MIN_SPEED) {
+        if (Math.abs(this.golem.velocity.x) < GOLEM_MIN_SPEED) {
             this.golem.velocity.x = 0.;
         }
 
         this.golem.velocity.y /= FLOOR_FRICTION;
-        if (this.golem.velocity.y < GOLEM_MIN_SPEED) {
+        if (Math.abs(this.golem.velocity.y) < GOLEM_MIN_SPEED) {
             this.golem.velocity.y = 0.;
         }
 
