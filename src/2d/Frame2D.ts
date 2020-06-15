@@ -1,4 +1,5 @@
 import { IAnimation } from "../Animation";
+import { IAnimationState } from "../AnimationState";
 
 interface IFrame2D {
     getFrame() : HTMLImageElement;
