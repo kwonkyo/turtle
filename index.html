@@ -4,26 +4,10 @@
         <title>Demos</title>
 
         <link rel='stylesheet' href='./style.css'>
+       
     </head>
     <body>
         <canvas></canvas>
-        <script type='text/javascript'>
-            const query = window.location.search;
-            const params = new URLSearchParams(query);
-            const name = params.get('name');
-
-            if (name) {
-                let script = document.createElement("script");
-                script.setAttribute("type", "module");
-                script.setAttribute("src", {
-                    'counter': './build/demos/DemoCounter.js',
-                    'rolling-camera': './build/demos/DemoRollingCamera.js',
-                    'moving-camera': './build/demos/DemoMovingCamera.js',
-                    'moving-sprite': './build/demos/DemoMovingSprite.js'
-                }[name]);
-
-                document.head.appendChild(script);
-            }
-        </script>
+        <script type='module' src='build/demos/moving-sprite/Main.js'></script>
     </body>
 </html>

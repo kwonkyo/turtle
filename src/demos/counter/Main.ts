@@ -1,9 +1,9 @@
-import { GameLoop } from '../GameLoop.js';
-import { IGameState } from '../GameState.js';
-import { GameStatus } from '../GameStatus.js';
-import { ISimulator } from '../Simulator.js';
-import { linearInterpolate } from '../Math.js';
-import { IRenderer } from '../Renderer.js';
+import { GameLoop } from '../../GameLoop.js';
+import { IGameState } from '../../GameState.js';
+import { GameStatus } from '../../GameStatus.js';
+import { ISimulator } from '../../Simulator.js';
+import { linearInterpolate } from '../../Math.js';
+import { IRenderer } from '../../Renderer.js';
 
 
 class DemoGameState implements IGameState {

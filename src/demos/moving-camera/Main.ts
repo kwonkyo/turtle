@@ -1,16 +1,16 @@
-import { GameStatus } from '../GameStatus.js';
-import { GameLoop } from '../GameLoop.js';
-import { GameState2D } from '../2d/GameState2D.js';
-import { Renderer2D } from '../2d/Renderer2D.js';
-import { Vector2D } from '../2d/Vector2D.js';
-import { ISimulator } from '../Simulator.js';
-import { Camera2D, KeyPressControlledCameraPosition2D } from '../2d/Camera2D.js';
-import { EventControlHub } from '../ControlHub.js';
-import { KeyPressController } from '../Controller.js';
-import { Rectangle, IRenderable2D } from '../2d/Renderable2D.js';
-import { Map2D } from '../2d/Map2D.js';
-import { RenderRequestPool2D } from '../2d/RenderRequestPool2D.js';
-import { RenderRequest2D } from '../2d/RenderRequest2D.js';
+import { GameStatus } from '../../GameStatus.js';
+import { GameLoop } from '../../GameLoop.js';
+import { GameState2D } from '../../2d/GameState2D.js';
+import { Renderer2D } from '../../2d/Renderer2D.js';
+import { Vector2D } from '../../2d/Vector2D.js';
+import { ISimulator } from '../../Simulator.js';
+import { Camera2D, KeyPressControlledCameraPosition2D } from '../../2d/Camera2D.js';
+import { EventControlHub } from '../../ControlHub.js';
+import { KeyPressController } from '../../Controller.js';
+import { Rectangle, IRenderable2D } from '../../2d/Renderable2D.js';
+import { Map2D } from '../../2d/Map2D.js';
+import { RenderRequestPool2D } from '../../2d/RenderRequestPool2D.js';
+import { RenderRequest2D } from '../../2d/RenderRequest2D.js';
 
 
 const MAP_ROWS: number = 17;
