@@ -25,19 +25,15 @@ const canvas = document
     .getContext('2d');
 
 const golem = new Golem(GOLEM_INITIAL_POSITION, new Vector2D(0, 0));
-const golemVelocity = new KeyPressControlledVector2D(
-    GOLEM_ACCELERATION, golem.velocity);
 const golemAnimation = new GolemAnimation();
 
 const camera = new Camera2D(
     CAMERA_INITIAL_POSITION, CAMERA_WIDTH, CAMERA_HEIGHT);
-const cameraPosition = new KeyPressControlledCameraPosition2D(
-    camera, CAMERA_SPEED, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS);
 
 const controlHub = new EventControlHub(
     [
-        cameraPosition,
-        golemVelocity
+        new KeyPressControlledVector2D(
+            GOLEM_ACCELERATION, golem.velocity)
     ],
     [
         KeyPressController.LEFT_ARROW,
