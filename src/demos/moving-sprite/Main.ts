@@ -1,9 +1,8 @@
 import { GameLoop } from '../../GameLoop.js';
 import { Renderer2D } from '../../2d/Renderer2D.js';
-import { Vector2D, KeyPressControlledVector2D } from '../../2d/Vector2D.js';
-import { Camera2D, KeyPressControlledCameraPosition2D } from '../../2d/Camera2D.js';
+import { Vector2D } from '../../2d/Vector2D.js';
+import { Camera2D } from '../../2d/Camera2D.js';
 import { EventControlHub } from '../../ControlHub.js';
-import { KeyPressController } from '../../Controller.js';
 import { FrameRenderable2D } from '../../2d/Renderable2D.js';
 import { Map2D } from '../../2d/Map2D.js';
 import { RenderRequestPool2D } from '../../2d/RenderRequestPool2D.js';
@@ -18,6 +17,8 @@ import { GolemAnimation } from './GolemAnimation.js';
 import { CameraMovementSimulator } from './CameraMovementSimulator.js';
 import { GolemPhysicsSimulator } from './GolemPhysicsSimulator.js';
 import { UniverseSimulator } from './UniverseSimulator.js';
+import { KeyPressController } from '../../Controller.js';
+import { KeyPressControlledGolem } from './KeyPressControlledGolem.js';
 
 
 const canvas = document
@@ -32,8 +33,7 @@ const camera = new Camera2D(
 
 const controlHub = new EventControlHub(
     [
-        new KeyPressControlledVector2D(
-            GOLEM_ACCELERATION, golem.velocity)
+        new KeyPressControlledGolem(golem, GOLEM_ACCELERATION)
     ],
     [
         KeyPressController.LEFT_ARROW,
