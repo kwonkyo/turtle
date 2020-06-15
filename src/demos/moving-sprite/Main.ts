@@ -13,7 +13,7 @@ import {
     UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS, MAP, BRICKS,
     GOLEM_DISPLAY_WIDTH, GOLEM_DISPLAY_HEIGHT, INITIAL_STATE } from './Constants.js';
 import { Golem } from './Golem.js';
-import { GolemAnimation } from './GolemAnimation.js';
+import { GolemFrame } from './GolemFrame.js';
 import { CameraMovementSimulator } from './CameraMovementSimulator.js';
 import { GolemPhysicsSimulator } from './GolemPhysicsSimulator.js';
 import { UniverseSimulator } from './UniverseSimulator.js';
@@ -26,7 +26,7 @@ const canvas = document
     .getContext('2d');
 
 const golem = new Golem(GOLEM_INITIAL_POSITION, new Vector2D(0, 0));
-const golemAnimation = new GolemAnimation();
+const golemFrame = new GolemFrame();
 
 const camera = new Camera2D(
     CAMERA_INITIAL_POSITION, CAMERA_WIDTH, CAMERA_HEIGHT);
@@ -49,12 +49,12 @@ pool.add(new RenderRequest2D(
     new Vector2D(0, 0), 0));
 pool.add(new RenderRequest2D(
     new FrameRenderable2D(
-        golemAnimation, GOLEM_DISPLAY_WIDTH, GOLEM_DISPLAY_HEIGHT),
+        golemFrame, GOLEM_DISPLAY_WIDTH, GOLEM_DISPLAY_HEIGHT),
     golem.position, 1));
 const renderer = new Renderer2D(canvas, camera, pool);
 
 const simulator = new UniverseSimulator([
-    new GolemPhysicsSimulator(golem, golemAnimation),
+    new GolemPhysicsSimulator(golem, golemFrame),
     new CameraMovementSimulator(camera, golem, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS)
 ]);
 

@@ -1,4 +1,4 @@
-import { IAnimation } from "../Animation";
+import { IAnimatable } from "../Animatable";
 import { IAnimationState } from "../AnimationState";
 
 interface IFrame2D {
@@ -20,7 +20,7 @@ class Frame2D implements IFrame2D {
 }
 
 
-class FrameAnimation2D implements IFrame2D, IAnimation {
+class AnimatedFrame2D implements IFrame2D, IAnimatable {
     private currentAnimationState: IAnimationState;
     private currentFrameIndex: number;
     private lastFrameIncrementTime: number = Date.now();
@@ -53,7 +53,7 @@ class FrameAnimation2D implements IFrame2D, IAnimation {
         return frame;
     }
 
-    receiveAnimationState(state: IAnimationState): void {
+    animate(state: IAnimationState): void {
         if (this.currentAnimationState !== state) {
             this.currentAnimationState = state;
             this.currentFrameIndex = 0;
@@ -65,5 +65,5 @@ class FrameAnimation2D implements IFrame2D, IAnimation {
 export {
     IFrame2D,
     Frame2D,
-    FrameAnimation2D
+    AnimatedFrame2D
 }

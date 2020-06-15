@@ -1,5 +1,5 @@
+import { IAnimatedModel } from "./AnimatedModel.js";
 import { IAnimatable } from "./Animatable.js";
-import { IAnimation } from "./Animation.js";
 
 
 /**
@@ -7,16 +7,16 @@ import { IAnimation } from "./Animation.js";
  * and then passes the new state to the corresponding IAnimation object
  * which will update the frame.
  */
-interface IAnimator<T extends IAnimatable, K extends IAnimation> {
-    animate(animatable: T, animation: K) : void;
+interface IAnimator<T extends IAnimatedModel, K extends IAnimatable> {
+    animate(model: T, animatable: K) : void;
 }
 
 
-class Animator<T extends IAnimatable, K extends IAnimation> implements IAnimator<T, K> {
-    animate(animatable: T, animation: K) : void {
-        let animationState = animatable.getAnimationState();
+class Animator<T extends IAnimatedModel, K extends IAnimatable> implements IAnimator<T, K> {
+    animate(model: T, animatable: K) : void {
+        let animationState = model.getAnimationState();
 
-        animation.receiveAnimationState(animationState);
+        animatable.animate(animationState);
     }
 }
 

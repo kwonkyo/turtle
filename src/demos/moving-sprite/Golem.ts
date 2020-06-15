@@ -1,11 +1,10 @@
-import { IModel } from "../../Model.js";
-import { IAnimatable } from "../../Animatable.js";
+import { IAnimatedModel } from "../../AnimatedModel.js";
 import { Vector2D } from "../../2d/Vector2D.js";
 import { IAnimationState } from "../../AnimationState.js";
 import { GolemAnimationState } from "./GolemAnimationState.js";
 
 
-class Golem implements IModel, IAnimatable {
+class Golem implements IAnimatedModel {
     private direction: number = 1;
 
     constructor(

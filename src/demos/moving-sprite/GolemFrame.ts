@@ -1,8 +1,8 @@
-import { FrameAnimation2D, Frame2D } from "../../2d/Frame2D.js";
+import { AnimatedFrame2D, Frame2D } from "../../2d/Frame2D.js";
 import { GolemAnimationState } from "./GolemAnimationState.js";
 
 
-class GolemAnimation extends FrameAnimation2D {
+class GolemFrame extends AnimatedFrame2D {
     static FRAMES : Record<string, Frame2D[]> = {
         "idle": [...Array(11).keys()]
             .map(x => String(x).padStart(3, '0'))
@@ -23,11 +23,11 @@ class GolemAnimation extends FrameAnimation2D {
     }
 
     constructor() {
-        super(GolemAnimation.FRAMES, 30 / 1000, GolemAnimationState.IDLE);
+        super(GolemFrame.FRAMES, 30 / 1000, GolemAnimationState.IDLE);
     }
 }
 
 
 export {
-    GolemAnimation
+    GolemFrame
 }
