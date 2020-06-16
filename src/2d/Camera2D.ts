@@ -45,7 +45,7 @@ class Camera2D implements ICamera2D {
     }
 
     getCameraFrameCoordinates(point: Vector2D): Vector2D {
-        return point.subtract(this.position);
+        return point.subtract(this.position).round();
     }
 }
 

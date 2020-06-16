@@ -1,9 +1,10 @@
 interface IVector {
-    add(other: IVector);
-    subtract(other: IVector);
-    multiply(other: IVector);
-    scale(magnitude: number);
-    interpolate(target: IVector, percent: number);
+    add(other: IVector) : IVector;
+    subtract(other: IVector) : IVector;
+    multiply(other: IVector) : IVector;
+    scale(magnitude: number) : IVector;
+    interpolate(target: IVector, percent: number) : IVector;
+    round() : IVector;
 }
 
 
@@ -47,6 +48,13 @@ class Vector implements IVector {
                 x, target.values[i], percent));
 
         return new Vector(interpolated);
+    }
+
+    round() : Vector {
+        const rounded = this.values
+            .map(x => Math.round(x));
+        
+        return new Vector(rounded)
     }
 }
 
