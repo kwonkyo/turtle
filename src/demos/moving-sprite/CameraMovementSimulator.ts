@@ -23,14 +23,20 @@ class CameraMovementSimulator implements ISimulator<GameState2D> {
 
     integrate(state: GameState2D, elapsedTime: number): GameState2D {
         this.camera.position.x = linearInterpolate(
-            this.camera.position.x, this.golem.position.x, 0.1);
+            this.camera.position.x,
+            this.golem.position.x - this.camera.width / 3,
+            0.1
+        );
         this.camera.position.x = Math.min(
             Math.max(0, this.camera.position.x),
             this.mapColumns * this.unitLength - this.camera.width
         );
 
         this.camera.position.y = linearInterpolate(
-            this.camera.position.y, this.golem.position.y, 0.1);
+            this.camera.position.y,
+            this.golem.position.y - this.camera.height / 3,
+            0.1
+        );
         this.camera.position.y = Math.min(
             Math.max(0, this.camera.position.y),
             this.mapRows * this.unitLength - this.camera.height
