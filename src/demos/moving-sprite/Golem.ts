@@ -15,12 +15,6 @@ class Golem implements IAnimatedModel {
     }
 
     getAnimationState(): IAnimationState {
-        if (this.velocity.x === 0 && this.velocity.y === 0) {
-            return this.direction === -1
-                ? GolemAnimationState.IDLE_LEFT
-                : GolemAnimationState.IDLE;
-        }
-        
         if (this.velocity.x > 0) {
             this.direction = 1;
             return GolemAnimationState.WALKING;
@@ -29,6 +23,10 @@ class Golem implements IAnimatedModel {
             this.direction = -1;
             return GolemAnimationState.WALKING_LEFT;
         }
+
+        return this.direction === -1
+            ? GolemAnimationState.IDLE_LEFT
+            : GolemAnimationState.IDLE;
     }
 }
 
