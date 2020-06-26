@@ -1,0 +1,7 @@
+interface ICollisionBound {
+}
+
+
+export {
+    ICollisionBound
+}
