@@ -35,10 +35,17 @@ class Golem implements IAnimatedModel, ICollidable2D<RectangleCollisionBound>{
 
     getCollisionBound(): RectangleCollisionBound {
         return new RectangleCollisionBound(
+<<<<<<< HEAD
             this.position,
             this.position.add(new Vector2D(this.width, 0)),
             this.position.add(new Vector2D(this.width, this.height)),
             this.position.add(new Vector2D(0, this.height))
+=======
+            this.position.round(),
+            this.position.add(new Vector2D(this.width, 0)).round(),
+            this.position.add(new Vector2D(this.height, this.width)).round(),
+            this.position.add(new Vector2D(0, this.height)).round()
+>>>>>>> 15796c7ba0088d07f6ccb5538962325885ec245c
         )
     }
 }
