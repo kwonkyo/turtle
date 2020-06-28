@@ -26,6 +26,8 @@ class RectangleCollider implements ICollider2D<RectangleCollisionBound, Rectangl
         a.lastPosition.y = resolution.y;
         a.position.x = resolution.x;
         a.position.y = resolution.y;
+        a.velocity.x = 0;
+        a.velocity.y = 0;
     }
 
     private binarySearchResolution(
