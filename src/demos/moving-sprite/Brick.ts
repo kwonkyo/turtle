@@ -32,15 +32,12 @@ class Brick implements IRenderable2D, ICollidable2D<RectangleCollisionBound> {
         this.renderable.draw(canvas, position);
     }
 
-<<<<<<< HEAD
     getWorldCoordinates() : Vector2D {
         return new Vector2D(
             (this.mapIndex % this.mapColumns) * this.unitLength,
             Math.floor(this.mapIndex / this.mapColumns) * this.unitLength);
     }
 
-=======
->>>>>>> 15796c7ba0088d07f6ccb5538962325885ec245c
     getCollisionBound(): RectangleCollisionBound {
         let coordinates = this.getWorldCoordinates();
 
@@ -51,15 +48,6 @@ class Brick implements IRenderable2D, ICollidable2D<RectangleCollisionBound> {
             new Vector2D(coordinates.x + this.unitLength, coordinates.y + this.unitLength)
         )
     }
-<<<<<<< HEAD
-=======
-
-    getWorldCoordinates() : Vector2D {
-        return new Vector2D(
-            (this.mapIndex % this.mapColumns) * this.unitLength,
-            Math.floor(this.mapIndex / this.mapColumns) * this.unitLength);
-    }
->>>>>>> 15796c7ba0088d07f6ccb5538962325885ec245c
 }
 
 
