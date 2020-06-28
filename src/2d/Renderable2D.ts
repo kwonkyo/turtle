@@ -61,7 +61,7 @@ class FrameRenderable2D extends VertexBasedRenderable2D {
 
     draw(canvas: CanvasRenderingContext2D, position: Vector2D): void {
         let frame = this.frame.getFrame();
-
+        
         canvas.drawImage(
             frame, 0, 0, frame.width, frame.height,
             position.x, position.y, this.width, this.height);

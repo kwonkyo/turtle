@@ -1,7 +1,11 @@
 import { ICollisionBound } from "./CollisionBound.js";
+import { IVector } from "./Math.js";
 
 interface ICollidable<T extends ICollisionBound> {
-    getCollionBound() : T;
+    position : IVector;
+    lastPosition : IVector;
+
+    getCollisionBound() : T;
 }
 
 
