@@ -50,3 +50,5 @@ export const GOLEM_ACCELERATION: Vector2D = new Vector2D(0.5, 0.5);
 export const GOLEM_MIN_SPEED: number = 0.1;
 
 export const FLOOR_FRICTION: number = 2;
+export const GRAVITY: number = 1e-3;
+export const TERMINAL_VELOCITY: number = 0.5;
