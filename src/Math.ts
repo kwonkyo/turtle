@@ -5,6 +5,7 @@ interface IVector {
     scale(magnitude: number) : IVector;
     interpolate(target: IVector, percent: number) : IVector;
     round() : IVector;
+    copy() : IVector;
 }
 
 
@@ -55,6 +56,10 @@ class Vector implements IVector {
             .map(x => Math.round(x));
         
         return new Vector(rounded)
+    }
+
+    copy(): Vector {
+        return new Vector(this.values.slice());
     }
 }
 

@@ -26,19 +26,19 @@ class RectangleCollisionBound implements ICollisionBound2D {
     }
 
     get top() : number {
-        return this.upperLeft.y;
+        return this.upperRight.y;
     }
 
     get bottom() : number {
-        return this.lowerLeft.y;
+        return this.lowerRight.y;
     }
 
-    get center() : Vector2D {
-        let size = this.lowerRight.subtract(this.upperLeft);
-        let center = this.upperLeft.add(
-            new Vector2D(size.x / 2, size.y / 2));
+    get width() : number {
+        return this.right - this.left;
+    }
 
-        return center;
+    get height() : number {
+        return this.bottom - this.top;
     }
 }
 

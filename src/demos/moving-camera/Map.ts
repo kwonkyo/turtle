@@ -1,9 +1,8 @@
-import { IRenderable2D } from "./Renderable2D.js";
-import { ICamera2D } from "./Camera2D.js";
-import { Vector2D } from "./Vector2D.js";
+import { IRenderable2D } from "../../2d/Renderable2D.js";
+import { ICamera2D } from "../../2d/Camera2D.js";
+import { Vector2D } from "../../2d/Vector2D.js";
 
-
-class Map2D implements IRenderable2D {
+class Map implements IRenderable2D {
     constructor(
             private map: number[],
             private bricks: Record<number, IRenderable2D>,
@@ -49,5 +48,5 @@ class Map2D implements IRenderable2D {
 
 
 export {
-    Map2D
+    Map
 }

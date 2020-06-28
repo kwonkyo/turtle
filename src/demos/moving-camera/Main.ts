@@ -8,7 +8,7 @@ import { Camera2D, KeyPressControlledCameraPosition2D } from '../../2d/Camera2D.
 import { EventControlHub } from '../../ControlHub.js';
 import { KeyPressController } from '../../Controller.js';
 import { Rectangle, IRenderable2D } from '../../2d/Renderable2D.js';
-import { Map2D } from '../../2d/Map2D.js';
+import { Map } from './Map.js'
 import { RenderRequestPool2D } from '../../2d/RenderRequestPool2D.js';
 import { RenderRequest2D } from '../../2d/RenderRequest2D.js';
 
@@ -22,13 +22,13 @@ const CAMERA_INITIAL_POSITION: Vector2D = new Vector2D(
     0, UNIT_LENGTH * MAP_ROWS - CAMERA_HEIGHT);
 const CAMERA_SPEED: number = 8;
 
-const BRICKS: Record<number, IRenderable2D>= {
+const MAP_TILE_TYPES: Record<number, IRenderable2D>= {
     0: new Rectangle('AQUA_SKY', '#7FDBFF', UNIT_LENGTH, UNIT_LENGTH),
     1: new Rectangle('BLUE_SKY', '#62B6FF', UNIT_LENGTH, UNIT_LENGTH),
     2: new Rectangle('GROUND', '#3D9970', UNIT_LENGTH, UNIT_LENGTH)
 };
 
-const MAP: number[] = [
+const MAP_TILES: number[] = [
     0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0,
@@ -78,7 +78,7 @@ const controlHub = new EventControlHub(
 
 const pool = new RenderRequestPool2D();
 pool.add(new RenderRequest2D(
-    new Map2D(MAP, BRICKS, MAP_COLUMNS, UNIT_LENGTH, camera),
+    new Map(MAP_TILES, MAP_TILE_TYPES, MAP_COLUMNS, UNIT_LENGTH, camera),
     new Vector2D(0, 0), 0));
 
 const renderer = new Renderer2D(canvas, camera, pool);

@@ -1,6 +1,5 @@
 import { ISimulator } from "../../Simulator.js";
 import { GameState2D } from "../../2d/GameState2D.js";
-import { GolemPhysicsSimulator } from "./GolemPhysicsSimulator.js";
 
 
 class UniverseSimulator implements ISimulator<GameState2D> {

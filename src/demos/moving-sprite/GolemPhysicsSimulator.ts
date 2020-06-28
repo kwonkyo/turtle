@@ -7,21 +7,17 @@ import { FLOOR_FRICTION, GOLEM_MIN_SPEED } from "./Constants.js";
 
 
 class GolemPhysicsSimulator implements ISimulator<GameState2D> {
-    private animator: IAnimator<Golem, GolemFrame>;
-
     constructor(
             private golem: Golem,
-            private golemFrame: GolemFrame) {
-        this.animator = new Animator();
+            private callback: () => void) {
         this.golem = golem;
-        this.golemFrame = golemFrame;
     }
 
     integrate(state: GameState2D, elapsedTime: number) : GameState2D {
-        this.animator.animate(this.golem, this.golemFrame);
-
-        this.golem.position.x += this.golem.velocity.x * elapsedTime;
-        this.golem.position.y += this.golem.velocity.y * elapsedTime;
+        this.golem.lastPosition.x = Math.round(this.golem.position.x);
+        this.golem.lastPosition.y = Math.round(this.golem.position.y);
+        this.golem.position.x += Math.round(this.golem.velocity.x * elapsedTime);
+        this.golem.position.y += Math.round(this.golem.velocity.y * elapsedTime);
 
         this.golem.velocity.x /= FLOOR_FRICTION;
         if (Math.abs(this.golem.velocity.x) < GOLEM_MIN_SPEED) {
@@ -32,6 +28,14 @@ class GolemPhysicsSimulator implements ISimulator<GameState2D> {
         if (Math.abs(this.golem.velocity.y) < GOLEM_MIN_SPEED) {
             this.golem.velocity.y = 0.;
         }
+
+        if (this.golem.velocity.x > 0) {
+            this.golem.direction.x = 1;
+        } else if (this.golem.velocity.x < 0) {
+            this.golem.direction.x = -1;
+        }
+
+        this.callback();
 
         return state;
     }

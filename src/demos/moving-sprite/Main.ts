@@ -4,13 +4,13 @@ import { Vector2D } from '../../2d/Vector2D.js';
 import { Camera2D } from '../../2d/Camera2D.js';
 import { EventControlHub } from '../../ControlHub.js';
 import { FrameRenderable2D } from '../../2d/Renderable2D.js';
-import { Map2D } from '../../2d/Map2D.js';
 import { RenderRequestPool2D } from '../../2d/RenderRequestPool2D.js';
 import { RenderRequest2D } from '../../2d/RenderRequest2D.js';
+import { Map } from './Map.js';
 import { 
     GOLEM_INITIAL_POSITION, GOLEM_ACCELERATION, CAMERA_INITIAL_POSITION,
-    CAMERA_WIDTH, CAMERA_HEIGHT, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS, MAP, BRICKS,
-    GOLEM_DISPLAY_WIDTH, GOLEM_DISPLAY_HEIGHT, INITIAL_STATE } from './Constants.js';
+    CAMERA_WIDTH, CAMERA_HEIGHT, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS,
+    GOLEM_DISPLAY_WIDTH, GOLEM_DISPLAY_HEIGHT, INITIAL_STATE, MAP } from './Constants.js';
 import { Golem } from './Golem.js';
 import { GolemFrame } from './GolemFrame.js';
 import { CameraMovementSimulator } from './CameraMovementSimulator.js';
@@ -18,6 +18,8 @@ import { GolemPhysicsSimulator } from './GolemPhysicsSimulator.js';
 import { UniverseSimulator } from './UniverseSimulator.js';
 import { KeyPressController } from '../../Controller.js';
 import { KeyPressControlledGolem } from './KeyPressControlledGolem.js';
+import { CollisionSimulator } from './CollisionSimulator.js';
+import { Animator } from '../../Animator.js';
 
 
 const canvas = document
@@ -44,16 +46,17 @@ const controlHub = new EventControlHub(
 
 const pool = new RenderRequestPool2D();
 pool.add(new RenderRequest2D(
-    new Map2D(MAP, BRICKS, MAP_COLUMNS, UNIT_LENGTH, camera),
-    new Vector2D(0, 0), 0));
+    new Map(MAP, camera), new Vector2D(0, 0), 0));
 pool.add(new RenderRequest2D(
     new FrameRenderable2D(
         golemFrame, GOLEM_DISPLAY_WIDTH, GOLEM_DISPLAY_HEIGHT),
     golem.position, 1));
 const renderer = new Renderer2D(canvas, camera, pool);
 
+const animator = new Animator();
 const simulator = new UniverseSimulator([
-    new GolemPhysicsSimulator(golem, golemFrame),
+    new GolemPhysicsSimulator(golem, () => animator.animate(golem, golemFrame)),
+    new CollisionSimulator(golem, MAP),
     new CameraMovementSimulator(camera, golem, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS)
 ]);
 

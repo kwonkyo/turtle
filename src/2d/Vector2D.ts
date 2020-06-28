@@ -46,6 +46,10 @@ class Vector2D implements IVector {
             this.vector.round());
     }
 
+    copy(): Vector2D {
+        return this.fromVector(this.vector.copy());
+    }
+
     private fromVector(vector: Vector) {
         return new Vector2D(
             vector.values[0], vector.values[1]);
