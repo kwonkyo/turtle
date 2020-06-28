@@ -1,7 +1,7 @@
-import { IRenderable2D } from "../../2d/Renderable2D.js";
+import { IRenderable2D } from "../2d/Renderable2D.js";
 import { Brick } from "./Brick.js";
-import { ICamera2D } from "../../2d/Camera2D.js";
-import { Vector2D } from "../../2d/Vector2D.js";
+import { ICamera2D } from "../2d/Camera2D.js";
+import { Vector2D } from "../2d/Vector2D.js";
 
 class Map implements IRenderable2D {
     constructor(

@@ -1,4 +1,4 @@
-import { AnimatedFrame2D, Frame2D } from "../../2d/Frame2D.js";
+import { AnimatedFrame2D, Frame2D } from "../2d/Frame2D.js";
 import { GolemAnimationState } from "./GolemAnimationState.js";
 
 

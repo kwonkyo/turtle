@@ -1,11 +1,11 @@
-import { GameLoop } from '../../GameLoop.js';
-import { Renderer2D } from '../../2d/Renderer2D.js';
-import { Vector2D } from '../../2d/Vector2D.js';
-import { Camera2D } from '../../2d/Camera2D.js';
-import { EventControlHub } from '../../ControlHub.js';
-import { FrameRenderable2D } from '../../2d/Renderable2D.js';
-import { RenderRequestPool2D } from '../../2d/RenderRequestPool2D.js';
-import { RenderRequest2D } from '../../2d/RenderRequest2D.js';
+import { GameLoop } from '../GameLoop.js';
+import { Renderer2D } from '../2d/Renderer2D.js';
+import { Vector2D } from '../2d/Vector2D.js';
+import { Camera2D } from '../2d/Camera2D.js';
+import { EventControlHub } from '../ControlHub.js';
+import { FrameRenderable2D } from '../2d/Renderable2D.js';
+import { RenderRequestPool2D } from '../2d/RenderRequestPool2D.js';
+import { RenderRequest2D } from '../2d/RenderRequest2D.js';
 import { Map } from './Map.js';
 import { 
     GOLEM_INITIAL_POSITION, GOLEM_ACCELERATION, CAMERA_INITIAL_POSITION,
@@ -16,10 +16,10 @@ import { GolemFrame } from './GolemFrame.js';
 import { CameraMovementSimulator } from './CameraMovementSimulator.js';
 import { GolemPhysicsSimulator } from './GolemPhysicsSimulator.js';
 import { UniverseSimulator } from './UniverseSimulator.js';
-import { KeyPressController } from '../../Controller.js';
+import { KeyPressController } from '../Controller.js';
 import { KeyPressControlledGolem } from './KeyPressControlledGolem.js';
 import { CollisionSimulator } from './CollisionSimulator.js';
-import { Animator } from '../../Animator.js';
+import { Animator } from '../Animator.js';
 
 
 const canvas = document

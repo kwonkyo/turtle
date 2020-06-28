@@ -1,9 +1,9 @@
-import { IRenderable2D } from "../../2d/Renderable2D";
-import { RectangleCollisionBound } from "../../2d/CollisionBound2D.js";
-import { ICamera2D } from "../../2d/Camera2D.js";
-import { Vector2D } from "../../2d/Vector2D.js";
-import { ICollidable2D } from "../../2d/Collidable2D";
-import { Vector } from "../../Math";
+import { IRenderable2D } from "../2d/Renderable2D";
+import { RectangleCollisionBound } from "../2d/CollisionBound2D.js";
+import { ICamera2D } from "../2d/Camera2D.js";
+import { Vector2D } from "../2d/Vector2D.js";
+import { ICollidable2D } from "../2d/Collidable2D";
+import { Vector } from "../Math";
 
 class Brick implements IRenderable2D, ICollidable2D<RectangleCollisionBound> {
     position: Vector2D;

@@ -1,6 +1,6 @@
-import { GameState2D } from "../../2d/GameState2D.js";
-import { ISimulator } from "../../Simulator.js";
-import { RectangleCollider } from "../../2d/Collider2D.js";
+import { GameState2D } from "../2d/GameState2D.js";
+import { ISimulator } from "../Simulator.js";
+import { RectangleCollider } from "../2d/Collider2D.js";
 import { Golem } from "./Golem.js";
 import { Brick } from "./Brick.js";
 

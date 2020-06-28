@@ -1,8 +1,8 @@
-import { ISimulator } from "../../Simulator.js";
-import { GameState2D } from "../../2d/GameState2D.js";
+import { ISimulator } from "../Simulator.js";
+import { GameState2D } from "../2d/GameState2D.js";
 import { GolemAnimationState } from "./GolemAnimationState.js";
-import { linearInterpolate } from "../../Math.js";
-import { ICamera2D } from "../../2d/Camera2D.js";
+import { linearInterpolate } from "../Math.js";
+import { ICamera2D } from "../2d/Camera2D.js";
 import { Golem } from "./Golem.js";
 
 

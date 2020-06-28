@@ -1,10 +1,10 @@
-import { IAnimatedModel } from "../../AnimatedModel.js";
-import { Vector2D } from "../../2d/Vector2D.js";
-import { IAnimationState } from "../../AnimationState.js";
+import { IAnimatedModel } from "../AnimatedModel.js";
+import { Vector2D } from "../2d/Vector2D.js";
+import { IAnimationState } from "../AnimationState.js";
 import { GolemAnimationState } from "./GolemAnimationState.js";
-import { RectangleCollisionBound } from "../../2d/CollisionBound2D.js";
+import { RectangleCollisionBound } from "../2d/CollisionBound2D.js";
 import { GOLEM_DISPLAY_WIDTH, GOLEM_DISPLAY_HEIGHT } from "./Constants.js";
-import { ICollidable2D } from "../../2d/Collidable2D.js";
+import { ICollidable2D } from "../2d/Collidable2D.js";
 
 
 class Golem implements IAnimatedModel, ICollidable2D<RectangleCollisionBound>{

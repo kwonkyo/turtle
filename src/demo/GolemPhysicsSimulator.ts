@@ -1,6 +1,6 @@
-import { ISimulator } from "../../Simulator.js";
-import { GameState2D } from "../../2d/GameState2D.js";
-import { IAnimator, Animator } from "../../Animator.js";
+import { ISimulator } from "../Simulator.js";
+import { GameState2D } from "../2d/GameState2D.js";
+import { IAnimator, Animator } from "../Animator.js";
 import { Golem } from "./Golem.js";
 import { GolemFrame } from "./GolemFrame.js";
 import { FLOOR_FRICTION, GOLEM_MIN_SPEED, GRAVITY, TERMINAL_VELOCITY } from "./Constants.js";

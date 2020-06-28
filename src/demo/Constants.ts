@@ -1,7 +1,7 @@
-import { Vector2D } from "../../2d/Vector2D.js";
-import { IRenderable2D, Rectangle } from "../../2d/Renderable2D.js";
-import { GameState2D } from "../../2d/GameState2D.js";
-import { GameStatus } from "../../GameStatus.js";
+import { Vector2D } from "../2d/Vector2D.js";
+import { IRenderable2D, Rectangle } from "../2d/Renderable2D.js";
+import { GameState2D } from "../2d/GameState2D.js";
+import { GameStatus } from "../GameStatus.js";
 import { Brick } from "./Brick.js";
 
 

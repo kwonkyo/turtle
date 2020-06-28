@@ -1,7 +1,7 @@
-import { KeyPressControlState, ControlType, KEYCODE } from "../../ControlState.js";
-import { IControllable } from "../../Controllable.js";
+import { KeyPressControlState, ControlType, KEYCODE } from "../ControlState.js";
+import { IControllable } from "../Controllable.js";
 import { Golem } from "./Golem.js";
-import { Vector2D } from "../../2d/Vector2D.js";
+import { Vector2D } from "../2d/Vector2D.js";
 
 class KeyPressControlledGolem implements IControllable<KeyPressControlState> {
     type: ControlType = ControlType.KEYPRESS;

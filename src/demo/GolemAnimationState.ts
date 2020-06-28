@@ -1,4 +1,4 @@
-import { IAnimationState } from "../../AnimationState.js";
+import { IAnimationState } from "../AnimationState.js";
 
 
 class GolemAnimationState implements IAnimationState {
