@@ -16,12 +16,11 @@ class GolemPhysicsSimulator implements ISimulator<GameState2D> {
     integrate(state: GameState2D, elapsedTime: number) : GameState2D {
         this.golem.velocity.x /= FLOOR_FRICTION;
         if (Math.abs(this.golem.velocity.x) < GOLEM_MIN_SPEED) {
-            this.golem.velocity.x = 0.;
+            this.golem.velocity.x = 0;
         }
 
-        this.golem.velocity.y += GRAVITY * elapsedTime;
-        if (Math.abs(this.golem.velocity.y) > TERMINAL_VELOCITY) {
-            this.golem.velocity.y = 0.;
+        if (this.golem.velocity.y <= TERMINAL_VELOCITY) {
+            this.golem.velocity.y += GRAVITY * elapsedTime;
         }
 
         if (this.golem.velocity.x > 0) {
@@ -34,7 +33,6 @@ class GolemPhysicsSimulator implements ISimulator<GameState2D> {
         this.golem.lastPosition.y = Math.round(this.golem.position.y);
         this.golem.position.x += Math.round(this.golem.velocity.x * elapsedTime);
         this.golem.position.y += Math.round(this.golem.velocity.y * elapsedTime);
-        console.log([this.golem.position.x, this.golem.position.y]);
 
         this.callback();
 
