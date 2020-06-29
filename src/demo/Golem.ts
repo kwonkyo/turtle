@@ -22,13 +22,14 @@ class Golem implements IAnimatedModel, ICollidable2D<RectangleCollisionBound>{
     }
 
     getAnimationState(): IAnimationState {
+        let leftward = this.direction.x == -1;
         if (Math.abs(this.velocity.x) > 0) {
-            return this.direction.x == -1
+            return leftward
                 ? GolemAnimationState.WALKING_LEFT
                 : GolemAnimationState.WALKING;
         }
 
-        return this.direction.x === -1
+        return leftward
             ? GolemAnimationState.IDLE_LEFT
             : GolemAnimationState.IDLE;
     }

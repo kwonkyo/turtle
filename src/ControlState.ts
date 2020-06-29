@@ -25,10 +25,12 @@ class KeyPressControlState implements IControlState {
     public keyCode: KEYCODE;
     public pressed: boolean;
     public hit: boolean;
+    public released: boolean;
 
     constructor(keyCode: KEYCODE) {
         this.pressed = false;
         this.hit = false;
+        this.released = false;
         this.keyCode = keyCode;
     }
 }

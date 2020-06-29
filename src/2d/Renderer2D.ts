@@ -12,7 +12,8 @@ class Renderer2D implements IRenderer<GameState2D> {
     constructor(
         private context: CanvasRenderingContext2D,
         private camera: ICamera2D,
-        private pool: IRenderRequestPool2D
+        private pool: IRenderRequestPool2D,
+        private callback: () => void=() => {}
     ) {
         this.buffer = document
             .createElement('canvas')
@@ -21,6 +22,7 @@ class Renderer2D implements IRenderer<GameState2D> {
 
         this.camera = camera;
         this.pool = pool;
+        this.callback = callback;
     }
 
     render(state: GameState2D): void {
@@ -35,6 +37,7 @@ class Renderer2D implements IRenderer<GameState2D> {
         }
 
         this.drawCanvas();
+        this.callback();
     }
 
     private clearBuffer() : void {

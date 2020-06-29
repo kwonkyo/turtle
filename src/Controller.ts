@@ -52,20 +52,21 @@ class KeyPressController extends Controller<KeyPressControlEvent, KeyPressContro
         super(new KeyPressControlState(keyCode));
     }
 
-    receives(controlEvent: KeyPressControlEvent) : boolean {
-        return (
-            super.receives(controlEvent) &&
-            controlEvent.payload.keyCode === this.controlState.keyCode);
-    }
-
     updateControlState(controlEvent: KeyPressControlEvent) : void {
-        if (!this.controlState.pressed && controlEvent.payload.type == 'keydown') {
-            this.controlState.hit = true;
-        } else {
+        if (controlEvent.payload.keyCode !== this.controlState.keyCode) {
             this.controlState.hit = false;
+            this.controlState.pressed = false;
+            this.controlState.released = false;
+        } else {
+            if (!this.controlState.pressed && controlEvent.payload.type == 'keydown') {
+                this.controlState.hit = true;
+            } else {
+                this.controlState.hit = false;
+            }
+    
+            this.controlState.pressed = controlEvent.payload.type == 'keydown';
+            this.controlState.released = controlEvent.payload.type == 'keyup';
         }
-
-        this.controlState.pressed = controlEvent.payload.type == 'keydown';
     }
 
     static LEFT_ARROW = new KeyPressController(KEYCODE.LEFT_ARROW);

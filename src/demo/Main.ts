@@ -44,6 +44,7 @@ const controlHub = new EventControlHub(
     ]
 );
 
+const animator = new Animator();
 const pool = new RenderRequestPool2D();
 pool.add(new RenderRequest2D(
     new Map(MAP, camera), new Vector2D(0, 0), 0));
@@ -51,11 +52,11 @@ pool.add(new RenderRequest2D(
     new FrameRenderable2D(
         golemFrame, GOLEM_DISPLAY_WIDTH, GOLEM_DISPLAY_HEIGHT),
     golem.position, 1));
-const renderer = new Renderer2D(canvas, camera, pool);
+const renderer = new Renderer2D(
+    canvas, camera, pool, () => animator.animate(golem, golemFrame));
 
-const animator = new Animator();
 const simulator = new UniverseSimulator([
-    new GolemPhysicsSimulator(golem, () => animator.animate(golem, golemFrame)),
+    new GolemPhysicsSimulator(golem),
     new CollisionSimulator(golem, MAP),
     new CameraMovementSimulator(camera, golem, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS)
 ]);
@@ -66,4 +67,5 @@ const gameLoop = new GameLoop(
 
 window.addEventListener('keydown', e => controlHub.receive(e));
 window.addEventListener('keyup', e => controlHub.receive(e));
+
 window.requestAnimationFrame(() => gameLoop.run());
