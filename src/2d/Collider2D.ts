@@ -2,32 +2,31 @@ import { ICollisionBound2D, RectangleCollisionBound } from "./CollisionBound2D.j
 import { ICollider } from "../Collider.js";
 import { ICollidable2D } from "./Collidable2D.js";
 import { Vector2D } from "./Vector2D.js";
+import { CollisionResponse2D } from "./CollisionResponse.js";
+import { CollisionResolution2D } from "./CollisionResolution.js";
 
 
 interface ICollider2D<T extends ICollisionBound2D, K extends ICollisionBound2D> extends ICollider<T, K>{
     didCollide(a: ICollidable2D<T>, b: ICollidable2D<K>) : boolean;
-    resolve(a: ICollidable2D<T>, b: ICollidable2D<K>);
+    resolve(a: ICollidable2D<T>, b: ICollidable2D<K>) : CollisionResponse2D;
 }
 
 
 class RectangleCollider implements ICollider2D<RectangleCollisionBound, RectangleCollisionBound> {
-    didCollide(a: ICollidable2D<RectangleCollisionBound>, b: ICollidable2D<RectangleCollisionBound>): boolean {
+    didCollide(a: ICollidable2D<RectangleCollisionBound>, b: ICollidable2D<RectangleCollisionBound>) : boolean {
         let aBound = a.getCollisionBound();
         let bBound = b.getCollisionBound();
 
         return this.checkCollision(aBound, bBound);
     }
 
-    resolve(a: ICollidable2D<RectangleCollisionBound>, b: ICollidable2D<RectangleCollisionBound>) {
+    resolve(a: ICollidable2D<RectangleCollisionBound>, b: ICollidable2D<RectangleCollisionBound>) : CollisionResponse2D {
         let resolution = this.binarySearchResolution(
             a, b, a.position, a.lastPosition);
-
-        a.lastPosition.x = resolution.x;
-        a.lastPosition.y = resolution.y;
-        a.position.x = resolution.x;
-        a.position.y = resolution.y;
-        a.velocity.x = 0;
-        a.velocity.y = 0;
+        
+        return new CollisionResponse2D(
+            new CollisionResolution2D(resolution, new Vector2D(0, 0)),
+            new CollisionResolution2D(b.position, b.velocity));
     }
 
     private binarySearchResolution(

@@ -23,7 +23,14 @@ class CollisionSimulator implements ISimulator<GameState2D> {
             }
 
             if (this.collider.didCollide(this.golem, brick)) {
-                this.collider.resolve(this.golem, brick);
+                let response = this.collider.resolve(
+                    this.golem, brick);
+                
+                this.golem.acceptCollisionResolution(
+                    response.resolveA);
+                brick.acceptCollisionResolution(
+                    response.resolveB);
+
                 break;
             }
         }

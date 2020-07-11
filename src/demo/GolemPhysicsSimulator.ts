@@ -1,7 +1,7 @@
 import { ISimulator } from "../Simulator.js";
 import { GameState2D } from "../2d/GameState2D.js";
 import { Golem } from "./Golem.js";
-import { GOLEM_MIN_SPEED, GRAVITY, TERMINAL_VELOCITY } from "./Constants.js";
+import { GOLEM_MIN_SPEED, GRAVITY, TERMINAL_VELOCITY, FRICTION } from "./Constants.js";
 
 
 class GolemPhysicsSimulator implements ISimulator<GameState2D> {
@@ -12,9 +12,10 @@ class GolemPhysicsSimulator implements ISimulator<GameState2D> {
 
     integrate(state: GameState2D, elapsedTime: number) : GameState2D {
         if (this.golem.velocity.y <= TERMINAL_VELOCITY) {
-            this.golem.velocity.y += GRAVITY * elapsedTime;
+            this.golem.velocity.y += this.golem.gravity * elapsedTime;
         }
 
+        this.golem.velocity.x /= FRICTION;
         if (Math.abs(this.golem.velocity.x) < GOLEM_MIN_SPEED) {
             this.golem.velocity.x = 0;
         }

@@ -27,24 +27,12 @@ const canvas = document
     .getContext('2d');
 
 const golem = new Golem(GOLEM_INITIAL_POSITION, new Vector2D(0, 0));
-const golemFrame = new GolemFrame();
 
 const camera = new Camera2D(
     CAMERA_INITIAL_POSITION, CAMERA_WIDTH, CAMERA_HEIGHT);
 
-const controlHub = new EventControlHub(
-    [
-        new KeyPressControlledGolem(golem, GOLEM_ACCELERATION)
-    ],
-    [
-        KeyPressController.LEFT_ARROW,
-        KeyPressController.UP_ARROW,
-        KeyPressController.RIGHT_ARROW,
-        KeyPressController.DOWN_ARROW
-    ]
-);
-
 const animator = new Animator();
+const golemFrame = new GolemFrame();
 const pool = new RenderRequestPool2D();
 pool.add(new RenderRequest2D(
     new Map(MAP, camera), new Vector2D(0, 0), 0));
@@ -64,7 +52,17 @@ const simulator = new UniverseSimulator([
 const gameLoop = new GameLoop(
     60 / 1000, simulator, renderer, INITIAL_STATE);
 
-
+const controlHub = new EventControlHub(
+    [
+        new KeyPressControlledGolem(golem, GOLEM_ACCELERATION)
+    ],
+    [
+        KeyPressController.LEFT_ARROW,
+        KeyPressController.UP_ARROW,
+        KeyPressController.RIGHT_ARROW,
+        KeyPressController.DOWN_ARROW
+    ]
+);
 window.addEventListener('keydown', e => controlHub.receive(e));
 window.addEventListener('keyup', e => controlHub.receive(e));
 

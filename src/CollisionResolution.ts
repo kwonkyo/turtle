@@ -1,0 +1,7 @@
+interface ICollisionResolution {
+}
+
+
+export {
+    ICollisionResolution
+}

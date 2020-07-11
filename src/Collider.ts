@@ -1,10 +1,10 @@
-import { ICollisionBound } from "./CollisionBound";
-import { ICollidable } from "./Collidable";
-import { IVector } from "./Math";
+import { ICollisionBound } from "./CollisionBound.js";
+import { ICollidable } from "./Collidable.js";
+import { ICollisionResponse } from "./CollisionResponse.js";
 
 interface ICollider<T extends ICollisionBound, K extends ICollisionBound> {
     didCollide(a: ICollidable<T>, b: ICollidable<K>) : boolean;
-    resolve(a: ICollidable<T>, b: ICollidable<K>) : null;
+    resolve(a: ICollidable<T>, b: ICollidable<K>) : ICollisionResponse;
 }
 
 

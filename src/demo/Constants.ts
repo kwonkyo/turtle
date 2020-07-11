@@ -51,3 +51,4 @@ export const GOLEM_MIN_SPEED: number = 0.1;
 
 export const GRAVITY: number = 1e-3;
 export const TERMINAL_VELOCITY: number = 0.5;
+export const FRICTION: number = 2;

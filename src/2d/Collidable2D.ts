@@ -1,6 +1,7 @@
-import { ICollidable } from "../Collidable";
-import { ICollisionBound } from "../CollisionBound";
-import { Vector2D } from "./Vector2D";
+import { ICollidable } from "../Collidable.js";
+import { ICollisionBound } from "../CollisionBound.js";
+import { Vector2D } from "./Vector2D.js";
+import { CollisionResolution2D } from "./CollisionResolution.js";
 
 interface ICollidable2D<T extends ICollisionBound> extends ICollidable<T>{
     position : Vector2D;
@@ -8,6 +9,7 @@ interface ICollidable2D<T extends ICollisionBound> extends ICollidable<T>{
     velocity : Vector2D;
 
     getCollisionBound() : T;
+    acceptCollisionResolution(resolution: CollisionResolution2D);
 }
 
 

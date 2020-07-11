@@ -2,6 +2,7 @@ import { KeyPressControlState, ControlType, KEYCODE } from "../ControlState.js";
 import { IControllable } from "../Controllable.js";
 import { Golem } from "./Golem.js";
 import { Vector2D } from "../2d/Vector2D.js";
+import { GRAVITY } from "./Constants.js";
 
 class KeyPressControlledGolem implements IControllable<KeyPressControlState> {
     type: ControlType = ControlType.KEYPRESS;
@@ -29,6 +30,7 @@ class KeyPressControlledGolem implements IControllable<KeyPressControlState> {
         } else if (controlState.keyCode === KEYCODE.UP_ARROW) {
             if (controlState.hit) {
                 this.golem.velocity.y -= this.acceleration.y;
+                this.golem.gravity = GRAVITY;
             }
         }
     }
