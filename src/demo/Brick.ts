@@ -14,13 +14,11 @@ class Brick implements IRenderable2D, ICollidable2D<RectangleCollisionBound> {
             private mapIndex: number,
             public renderable: IRenderable2D,
             private mapColumns: number,
-            private unitLength: number,
-            public isWall: boolean) {
+            private unitLength: number) {
         this.mapIndex = mapIndex;
         this.renderable = renderable;
         this.mapColumns = mapColumns;
         this.unitLength = unitLength;
-        this.isWall = isWall;
 
         this.position = this.lastPosition = this.getWorldCoordinates();
     }

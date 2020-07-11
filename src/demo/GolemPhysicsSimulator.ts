@@ -1,7 +1,7 @@
 import { ISimulator } from "../Simulator.js";
 import { GameState2D } from "../2d/GameState2D.js";
 import { Golem } from "./Golem.js";
-import { GOLEM_MIN_SPEED, GRAVITY, TERMINAL_VELOCITY, FRICTION } from "./Constants.js";
+import { GOLEM_MIN_SPEED, TERMINAL_VELOCITY, FRICTION } from "./Constants.js";
 
 
 class GolemPhysicsSimulator implements ISimulator<GameState2D> {
