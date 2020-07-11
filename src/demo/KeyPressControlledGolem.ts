@@ -18,14 +18,10 @@ class KeyPressControlledGolem implements IControllable<KeyPressControlState> {
         if (controlState.keyCode === KEYCODE.LEFT_ARROW) {
             if (controlState.pressed) {
                 this.golem.velocity.x -= this.acceleration.x;
-            } else if (controlState.released) {
-                this.golem.velocity.x = 0;
             }
         } else if (controlState.keyCode === KEYCODE.RIGHT_ARROW) {
             if (controlState.pressed) {
                 this.golem.velocity.x += this.acceleration.x;
-            } else if (controlState.released) {
-                this.golem.velocity.x = 0;
             }
         } else if (controlState.keyCode === KEYCODE.UP_ARROW) {
             if (controlState.hit) {
