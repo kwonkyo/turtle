@@ -17,8 +17,8 @@ class GolemPhysicsSimulator implements ISimulator<GameState2D> {
     integrate(state: GameState2D, elapsedTime: number) : GameState2D {
         let collisionBound = this.golem.getCollisionBound();
         this.golem.gravity = Math.min(
-            this.world.getGravity(collisionBound.upperLeft),
-            this.world.getGravity(collisionBound.upperRight));
+            this.world.getGravity(collisionBound.lowerLeft),
+            this.world.getGravity(collisionBound.lowerRight));
 
         if (this.golem.velocity.y <= TERMINAL_VELOCITY) {
             this.golem.velocity.y += this.golem.gravity * elapsedTime;

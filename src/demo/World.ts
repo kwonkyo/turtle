@@ -9,6 +9,7 @@ interface IWorld {
 }
 
 class World implements IWorld, IRenderable2D {
+    private castLength: number = 1;
     constructor(
             private bricks: Brick[],
             private camera: ICamera2D) {
@@ -17,8 +18,8 @@ class World implements IWorld, IRenderable2D {
     }
 
     getGravity(coordinates: Vector2D): number {
-        let unitLength = this.bricks[0].unitLength;
-        let checkPosition = coordinates.add(new Vector2D(0, unitLength * 1.25));
+        let checkPosition = coordinates.add(
+            new Vector2D(0, this.castLength));
 
         if (this.getBrickAt(checkPosition).isWall) {
             return 0;
