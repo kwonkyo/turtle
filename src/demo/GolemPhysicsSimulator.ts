@@ -3,7 +3,6 @@ import { GameState2D } from "../2d/GameState2D.js";
 import { Golem } from "./Golem.js";
 import { GOLEM_MIN_SPEED, TERMINAL_VELOCITY, FRICTION } from "./Constants.js";
 import { IWorld } from "./World.js";
-import { Vector2D } from "../2d/Vector2D.js";
 
 
 class GolemPhysicsSimulator implements ISimulator<GameState2D> {
