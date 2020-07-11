@@ -6,7 +6,7 @@ import { EventControlHub } from '../ControlHub.js';
 import { FrameRenderable2D } from '../2d/Renderable2D.js';
 import { RenderRequestPool2D } from '../2d/RenderRequestPool2D.js';
 import { RenderRequest2D } from '../2d/RenderRequest2D.js';
-import { Map } from './Map.js';
+import { World } from './World.js';
 import { 
     GOLEM_INITIAL_POSITION, GOLEM_ACCELERATION, CAMERA_INITIAL_POSITION,
     CAMERA_WIDTH, CAMERA_HEIGHT, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS,
@@ -30,12 +30,13 @@ const golem = new Golem(GOLEM_INITIAL_POSITION, new Vector2D(0, 0));
 
 const camera = new Camera2D(
     CAMERA_INITIAL_POSITION, CAMERA_WIDTH, CAMERA_HEIGHT);
+const world = new World(MAP, camera);
 
 const animator = new Animator();
 const golemFrame = new GolemFrame();
 const pool = new RenderRequestPool2D();
 pool.add(new RenderRequest2D(
-    new Map(MAP, camera), new Vector2D(0, 0), 0));
+    world, new Vector2D(0, 0), 0));
 pool.add(new RenderRequest2D(
     new FrameRenderable2D(
         golemFrame, GOLEM_DISPLAY_WIDTH, GOLEM_DISPLAY_HEIGHT),
@@ -44,7 +45,7 @@ const renderer = new Renderer2D(
     canvas, camera, pool, () => animator.animate(golem, golemFrame));
 
 const simulator = new UniverseSimulator([
-    new GolemPhysicsSimulator(golem),
+    new GolemPhysicsSimulator(golem, world),
     new CollisionSimulator(golem, MAP),
     new CameraMovementSimulator(camera, golem, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS)
 ]);
