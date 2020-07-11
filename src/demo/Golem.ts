@@ -56,8 +56,13 @@ class Golem implements IAnimatedModel, ICollidable2D<RectangleCollisionBound>{
         this.position.y = resolution.position.y;
         this.lastPosition.x = resolution.position.x;
         this.lastPosition.y = resolution.position.y;
-        this.velocity.x = resolution.velocity.x;
-        this.velocity.y = resolution.velocity.y;
+        
+        // Disable velocity in the colliding dimension
+        if (Math.abs(offset.y) > Math.abs(offset.x)) {
+            this.velocity.y = resolution.velocity.y;
+        } else {
+            this.velocity.x = resolution.velocity.x;
+        }
     }
 }
 
