@@ -48,7 +48,7 @@ class World implements IWorld, IRenderable2D {
         let unitLength = this.bricks[0].unitLength;
         let mapColumns = this.bricks[0].mapColumns;
         
-        let column = Math.ceil(coordinates.x / unitLength);
+        let column = Math.floor(coordinates.x / unitLength);
         let row = Math.ceil(coordinates.y / unitLength);
 
         return this.bricks[row * mapColumns + column];
