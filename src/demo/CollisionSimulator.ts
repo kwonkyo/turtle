@@ -1,16 +1,16 @@
 import { GameState2D } from "../2d/GameState2D.js";
 import { ISimulator } from "../Simulator.js";
 import { RectangleCollider } from "../2d/Collider2D.js";
-import { Golem } from "./Golem.js";
+import { Character } from "./Character.js";
 import { Brick } from "./Brick.js";
 
 class CollisionSimulator implements ISimulator<GameState2D> {
     private collider: RectangleCollider;
 
     constructor(
-            private golem: Golem,
+            private character: Character,
             private map: Brick[]) {
-        this.golem = golem;
+        this.character = character;
         this.map = map;
 
         this.collider = new RectangleCollider();
@@ -22,11 +22,11 @@ class CollisionSimulator implements ISimulator<GameState2D> {
                 continue;
             }
 
-            if (this.collider.didCollide(this.golem, brick)) {
+            if (this.collider.didCollide(this.character, brick)) {
                 let response = this.collider.resolve(
-                    this.golem, brick);
+                    this.character, brick);
                 
-                this.golem.acceptCollisionResolution(
+                this.character.acceptCollisionResolution(
                     response.resolveA);
                 brick.acceptCollisionResolution(
                     response.resolveB);

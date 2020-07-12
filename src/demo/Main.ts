@@ -8,16 +8,16 @@ import { RenderRequestPool2D } from '../2d/RenderRequestPool2D.js';
 import { RenderRequest2D } from '../2d/RenderRequest2D.js';
 import { World } from './World.js';
 import { 
-    GOLEM_INITIAL_POSITION, GOLEM_ACCELERATION, CAMERA_INITIAL_POSITION,
+    CHARACTER_INITIAL_POSITION, CHARACTER_ACCELERATION, CAMERA_INITIAL_POSITION,
     CAMERA_WIDTH, CAMERA_HEIGHT, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS,
-    GOLEM_DISPLAY_WIDTH, GOLEM_DISPLAY_HEIGHT, INITIAL_STATE, MAP } from './Constants.js';
-import { Golem } from './Golem.js';
-import { GolemFrame } from './GolemFrame.js';
+    CHARACTER_DISPLAY_WIDTH, CHARACTER_DISPLAY_HEIGHT, INITIAL_STATE, MAP } from './Constants.js';
+import { Character } from './Character.js';
+import { CharacterFrame } from './CharacterFrame.js';
 import { CameraMovementSimulator } from './CameraMovementSimulator.js';
-import { GolemPhysicsSimulator } from './GolemPhysicsSimulator.js';
+import { CharacterPhysicsSimulator } from './CharacterPhysicsSimulator.js';
 import { UniverseSimulator } from './UniverseSimulator.js';
 import { KeyPressController } from '../Controller.js';
-import { KeyPressControlledGolem } from './KeyPressControlledGolem.js';
+import { CharacterMotion } from './CharacterMotion.js';
 import { CollisionSimulator } from './CollisionSimulator.js';
 import { Animator } from '../Animator.js';
 
@@ -26,28 +26,28 @@ const canvas = document
     .querySelector('canvas')
     .getContext('2d');
 
-const golem = new Golem(GOLEM_INITIAL_POSITION, new Vector2D(0, 0));
+const character = new Character(CHARACTER_INITIAL_POSITION, new Vector2D(0, 0));
 
 const camera = new Camera2D(
     CAMERA_INITIAL_POSITION, CAMERA_WIDTH, CAMERA_HEIGHT);
 const world = new World(MAP, camera);
 
 const animator = new Animator();
-const golemFrame = new GolemFrame();
+const characterFrame = new CharacterFrame();
 const pool = new RenderRequestPool2D();
 pool.add(new RenderRequest2D(
     world, new Vector2D(0, 0), 0));
 pool.add(new RenderRequest2D(
     new FrameRenderable2D(
-        golemFrame, GOLEM_DISPLAY_WIDTH, GOLEM_DISPLAY_HEIGHT),
-    golem.position, 1));
+        characterFrame, CHARACTER_DISPLAY_WIDTH, CHARACTER_DISPLAY_HEIGHT),
+    character.position, 1));
 const renderer = new Renderer2D(
-    canvas, camera, pool, () => animator.animate(golem, golemFrame));
+    canvas, camera, pool, () => animator.animate(character, characterFrame));
 
 const simulator = new UniverseSimulator([
-    new GolemPhysicsSimulator(golem, world),
-    new CollisionSimulator(golem, MAP),
-    new CameraMovementSimulator(camera, golem, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS)
+    new CharacterPhysicsSimulator(character, world),
+    new CollisionSimulator(character, MAP),
+    new CameraMovementSimulator(camera, character, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS)
 ]);
 
 const gameLoop = new GameLoop(
@@ -55,7 +55,7 @@ const gameLoop = new GameLoop(
 
 const controlHub = new EventControlHub(
     [
-        new KeyPressControlledGolem(golem, GOLEM_ACCELERATION)
+        new CharacterMotion(character, CHARACTER_ACCELERATION)
     ],
     [
         KeyPressController.LEFT_ARROW,

@@ -42,12 +42,13 @@ export const MAP = MAP_TILES
 
 export const INITIAL_STATE: GameState2D = new GameState2D(GameStatus.CONTINUE);
 
-export const GOLEM_DISPLAY_WIDTH: number = 1.5 * UNIT_LENGTH;
-export const GOLEM_DISPLAY_HEIGHT: number = 1.35 * UNIT_LENGTH;
-export const GOLEM_INITIAL_POSITION: Vector2D = new Vector2D(
+export const CHARACTER_DISPLAY_WIDTH: number = 1.2 * UNIT_LENGTH;
+export const CHARACTER_DISPLAY_HEIGHT: number = 1.8 * UNIT_LENGTH;
+export const CHARACTER_ACCELERATION: Vector2D = new Vector2D(0.5, 0.5);
+export const CHARACTER_MIN_SPEED: number = 1e-3;
+
+export const CHARACTER_INITIAL_POSITION: Vector2D = new Vector2D(
     3 * UNIT_LENGTH, 10 * UNIT_LENGTH);
-export const GOLEM_ACCELERATION: Vector2D = new Vector2D(0.5, 0.5);
-export const GOLEM_MIN_SPEED: number = 0.1;
 
 export const GRAVITY: number = 1e-3;
 export const TERMINAL_VELOCITY: number = 0.5;
