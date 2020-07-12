@@ -32,8 +32,9 @@ class CharacterPhysicsSimulator implements ISimulator<GameState2D> {
             this.character.velocity.x = 0;
         }
 
-        if (this.character.velocity.y <= TERMINAL_VELOCITY) {
-            this.character.velocity.y += this.character.gravity * elapsedTime;
+        this.character.velocity.y += this.character.gravity * elapsedTime;
+        if (this.character.velocity.y > TERMINAL_VELOCITY) {
+            this.character.velocity.y = TERMINAL_VELOCITY;
         }
 
         if (this.character.velocity.x > 0) {
