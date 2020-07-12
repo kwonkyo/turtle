@@ -13,7 +13,7 @@ import {
     CHARACTER_DISPLAY_WIDTH, CHARACTER_DISPLAY_HEIGHT, INITIAL_STATE, MAP } from './Constants.js';
 import { Character } from './Character.js';
 import { CharacterFrame } from './CharacterFrame.js';
-import { CameraMovementSimulator } from './CameraMovementSimulator.js';
+import { CameraMotionSimulator } from './CameraMotionSimulator.js';
 import { CharacterPhysicsSimulator } from './CharacterPhysicsSimulator.js';
 import { UniverseSimulator } from './UniverseSimulator.js';
 import { KeyPressController } from '../Controller.js';
@@ -26,28 +26,31 @@ const canvas = document
     .querySelector('canvas')
     .getContext('2d');
 
-const character = new Character(CHARACTER_INITIAL_POSITION, new Vector2D(0, 0));
-
 const camera = new Camera2D(
     CAMERA_INITIAL_POSITION, CAMERA_WIDTH, CAMERA_HEIGHT);
+
+const character = new Character(
+    CHARACTER_INITIAL_POSITION, new Vector2D(0, 0));
 const world = new World(MAP, camera);
 
-const animator = new Animator();
 const characterFrame = new CharacterFrame();
-const pool = new RenderRequestPool2D();
-pool.add(new RenderRequest2D(
-    world, new Vector2D(0, 0), 0));
-pool.add(new RenderRequest2D(
-    new FrameRenderable2D(
-        characterFrame, CHARACTER_DISPLAY_WIDTH, CHARACTER_DISPLAY_HEIGHT),
-    character.position, 1));
+const renderRequestPool = new RenderRequestPool2D()
+    .add(new RenderRequest2D(
+        world, new Vector2D(0, 0), 0))
+    .add(new RenderRequest2D(
+        new FrameRenderable2D(
+            characterFrame, CHARACTER_DISPLAY_WIDTH, CHARACTER_DISPLAY_HEIGHT),
+        character.position, 1));
+const animator = new Animator();
 const renderer = new Renderer2D(
-    canvas, camera, pool, () => animator.animate(character, characterFrame));
+    canvas, camera, renderRequestPool,
+    () => animator.animate(character, characterFrame));
 
 const simulator = new UniverseSimulator([
     new CharacterPhysicsSimulator(character, world),
     new CollisionSimulator(character, MAP),
-    new CameraMovementSimulator(camera, character, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS)
+    new CameraMotionSimulator(
+        camera, character, UNIT_LENGTH, MAP_ROWS, MAP_COLUMNS)
 ]);
 
 const gameLoop = new GameLoop(

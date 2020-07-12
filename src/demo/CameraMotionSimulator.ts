@@ -5,7 +5,7 @@ import { ICamera2D } from "../2d/Camera2D.js";
 import { Character } from "./Character.js";
 
 
-class CameraMovementSimulator implements ISimulator<GameState2D> {
+class CameraMotionSimulator implements ISimulator<GameState2D> {
     constructor(
             private camera: ICamera2D,
             private character: Character,
@@ -49,5 +49,5 @@ class CameraMovementSimulator implements ISimulator<GameState2D> {
 
 
 export {
-    CameraMovementSimulator
+    CameraMotionSimulator
 }
