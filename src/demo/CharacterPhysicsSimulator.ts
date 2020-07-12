@@ -1,7 +1,10 @@
 import { ISimulator } from "../Simulator.js";
 import { GameState2D } from "../2d/GameState2D.js";
 import { Character } from "./Character.js";
-import { CHARACTER_MIN_SPEED, TERMINAL_VELOCITY, FRICTION } from "./Constants.js";
+import {
+    CHARACTER_IDLE_SPEED, TERMINAL_VELOCITY, GROUND_FRICTION,
+    AIR_FRICTION, 
+    CHARACTER_ACCELERATION} from "./Constants.js";
 import { IWorld } from "./World.js";
 
 
@@ -18,14 +21,19 @@ class CharacterPhysicsSimulator implements ISimulator<GameState2D> {
         this.character.gravity = Math.min(
             this.world.getGravity(collisionBound.lowerLeft),
             this.world.getGravity(collisionBound.lowerRight));
+        
+        if (!this.character.onSurface()) {
+            this.character.velocity.x /= AIR_FRICTION;
+        } else {
+            this.character.velocity.x /= GROUND_FRICTION;
+        }
+
+        if (Math.abs(this.character.velocity.x) <= CHARACTER_IDLE_SPEED) {
+            this.character.velocity.x = 0;
+        }
 
         if (this.character.velocity.y <= TERMINAL_VELOCITY) {
             this.character.velocity.y += this.character.gravity * elapsedTime;
-        }
-
-        this.character.velocity.x /= FRICTION;
-        if (Math.abs(this.character.velocity.x) < CHARACTER_MIN_SPEED) {
-            this.character.velocity.x = 0;
         }
 
         if (this.character.velocity.x > 0) {

@@ -64,6 +64,10 @@ class Character implements IAnimatedModel, ICollidable2D<RectangleCollisionBound
             this.velocity.x = resolution.velocity.x;
         }
     }
+
+    onSurface() {
+        return this.gravity === 0;
+    }
 }
 
 

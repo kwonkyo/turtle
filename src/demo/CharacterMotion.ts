@@ -16,11 +16,11 @@ class CharacterMotion implements IControllable<KeyPressControlState> {
 
     obey(controlState: KeyPressControlState) : void {
         if (controlState.keyCode === KEYCODE.LEFT_ARROW) {
-            if (controlState.pressed) {
+            if (controlState.pressed && this.character.onSurface()) {
                 this.character.velocity.x -= this.acceleration.x;
             }
         } else if (controlState.keyCode === KEYCODE.RIGHT_ARROW) {
-            if (controlState.pressed) {
+            if (controlState.pressed && this.character.onSurface()) {
                 this.character.velocity.x += this.acceleration.x;
             }
         } else if (controlState.keyCode === KEYCODE.UP_ARROW) {
