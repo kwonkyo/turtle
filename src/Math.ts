@@ -4,6 +4,7 @@ interface IVector {
     multiply(other: IVector) : IVector;
     scale(magnitude: number) : IVector;
     interpolate(target: IVector, percent: number) : IVector;
+    distance(other: IVector) : number;
     round() : IVector;
     copy() : IVector;
 }
@@ -49,6 +50,12 @@ class Vector implements IVector {
                 x, target.values[i], percent));
 
         return new Vector(interpolated);
+    }
+
+    distance(other: Vector) : number {
+        return this.values
+            .map((x, i) => (x - other.values[i])**2)
+            .reduce((z, x) => z + x, 0);
     }
 
     round() : Vector {

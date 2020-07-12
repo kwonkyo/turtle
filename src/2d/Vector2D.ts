@@ -41,6 +41,10 @@ class Vector2D implements IVector {
             this.vector.interpolate(target.vector, percent));
     }
 
+    distance(other: Vector2D) {
+        return this.vector.distance(other.vector);
+    }
+
     round(): Vector2D {
         return this.fromVector(
             this.vector.round());

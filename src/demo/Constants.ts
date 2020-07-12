@@ -53,4 +53,4 @@ export const CHARACTER_INITIAL_POSITION: Vector2D = new Vector2D(
 export const GRAVITY: number = 1e-3;
 export const TERMINAL_VELOCITY: number = 0.5;
 export const GROUND_FRICTION: number = 2;
-export const AIR_FRICTION: number = 1.01;
+export const AIR_FRICTION: number = 1.001;

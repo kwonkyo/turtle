@@ -3,8 +3,7 @@ import { GameState2D } from "../2d/GameState2D.js";
 import { Character } from "./Character.js";
 import {
     CHARACTER_IDLE_SPEED, TERMINAL_VELOCITY, GROUND_FRICTION,
-    AIR_FRICTION, 
-    CHARACTER_ACCELERATION} from "./Constants.js";
+    AIR_FRICTION } from "./Constants.js";
 import { IWorld } from "./World.js";
 
 

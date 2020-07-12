@@ -31,7 +31,11 @@ class RectangleCollider implements ICollider2D<RectangleCollisionBound, Rectangl
 
     private binarySearchResolution(
             a: ICollidable2D<RectangleCollisionBound>, b: ICollidable2D<RectangleCollisionBound>,
-            position: Vector2D, lastPosition: Vector2D) : Vector2D {
+            position: Vector2D, lastPosition: Vector2D, eps=1e-3) : Vector2D {
+        if (position.distance(lastPosition) < eps) {
+            return lastPosition;
+        }
+
         let oldBound = a.getCollisionBound();
         let bBound = b.getCollisionBound();
         
